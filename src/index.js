@@ -8,6 +8,12 @@ fastify.register(require('@fastify/static'), {
   prefix: '/'
 });
 
+fastify.post('/auth', async (request, reply) => {
+  const { password } = request.body;
+  const correct = process.env.STUDIO_PASSWORD || 'kivo2024';
+  return { ok: password === correct };
+});
+
 fastify.get('/health', async () => {
   return { status: 'ok', studio: 'AI Game Studio', version: '1.0.0' };
 });
@@ -34,7 +40,7 @@ fastify.post('/command', async (request, reply) => {
 
 const start = async () => {
   try {
-    await fastify.listen({ port: 3000, host: '0.0.0.0' });
+    await fastify.listen({ port: process.env.PORT || 3000, host: '0.0.0.0' });
     console.log('🎮 AI Game Studio backend running on port 3000');
   } catch (err) {
     console.error(err);
