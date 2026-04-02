@@ -3,4 +3,4 @@ builder = "nixpacks"
 
 [deploy]
 startCommand = "node src/index.js"
-restartPolicyType = "on-failure"
+restartPolicyType = "ON_FAILURE"
