@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kivo Studios — AI Game Studio</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+  :root {
+    --bg:#0c0c0f;--surface:#141418;--surface2:#1c1c22;--border:rgba(255,255,255,0.06);--border-hover:rgba(255,255,255,0.12);--text:#e8e8f0;--muted:#6b6b80;--accent:#7c6af7;--accent2:#a78bfa;--green:#22d3a0;--amber:#f59e0b;--red:#ef4444;--blue:#3b82f6;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;height:100vh;display:flex;flex-direction:column;overflow:hidden;}
+  nav{height:52px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:24px;flex-shrink:0;}
+  .logo{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;letter-spacing:-0.3px;}
+  .logo-icon{width:28px;height:28px;background:linear-gradient(135deg,var(--accent),#4f46e5);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;}
+  .nav-tabs{display:flex;gap:2px;margin-left:8px;}
+  .nav-tab{padding:5px 12px;border-radius:6px;font-size:13px;color:var(--muted);cursor:pointer;transition:all .15s;border:none;background:none;font-family:'Inter',sans-serif;}
+  .nav-tab:hover{color:var(--text);background:var(--surface2);}
+  .nav-tab.active{color:var(--text);background:var(--surface2);}
+  .nav-right{margin-left:auto;display:flex;align-items:center;gap:12px;}
+  .status-pill{display:flex;align-items:center;gap:6px;padding:4px 10px;background:rgba(34,211,160,0.08);border:1px solid rgba(34,211,160,0.2);border-radius:20px;font-size:12px;color:var(--green);}
+  .dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+  .layout{display:flex;flex:1;overflow:hidden;}
+  .sidebar{width:220px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;}
+  .sidebar-section{padding:16px 12px 8px;}
+  .sidebar-label{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;padding:0 4px;margin-bottom:6px;}
+  .cmd-btn{width:100%;display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:6px;font-size:13px;color:var(--muted);cursor:pointer;transition:all .15s;border:none;background:none;font-family:'Inter',sans-serif;text-align:left;}
+  .cmd-btn:hover{color:var(--text);background:var(--surface2);}
+  .cmd-btn.active{color:var(--accent2);background:rgba(124,106,247,0.1);}
+  .cmd-icon{width:18px;height:18px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;}
+  .divider{height:1px;background:var(--border);margin:8px 12px;}
+  .hist-item{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;cursor:pointer;transition:all .15s;}
+  .hist-item:hover{background:var(--surface2);}
+  .hist-item.selected{background:var(--surface2);}
+  .hist-cmd{font-size:12px;color:var(--accent2);font-family:'JetBrains Mono',monospace;flex:1;}
+  .hist-time{font-size:10px;color:var(--muted);}
+  .main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+  .page{display:none;flex:1;overflow:hidden;flex-direction:column;}
+  .page.active{display:flex;}
+  .output-area{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:12px;}
+  .agent-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;transition:border-color .2s;}
+  .agent-card:hover{border-color:var(--border-hover);}
+  .card-header{padding:12px 16px;display:flex;align-items:center;gap:10px;cursor:pointer;border-bottom:1px solid var(--border);}
+  .card-header:hover{background:rgba(255,255,255,0.02);}
+  .card-avatar{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;}
+  .card-title{font-size:13px;font-weight:500;flex:1;}
+  .card-badge{font-size:11px;padding:2px 8px;border-radius:20px;background:rgba(34,211,160,0.1);color:var(--green);border:1px solid rgba(34,211,160,0.2);}
+  .card-toggle{font-size:12px;color:var(--muted);}
+  .card-body{padding:16px;font-size:13px;line-height:1.8;color:#b0b0c0;font-family:'JetBrains Mono',monospace;white-space:pre-wrap;word-wrap:break-word;max-height:600px;overflow-y:auto;}
+  .card-body.collapsed{display:none;}
+  .bottom-bar{padding:12px 20px;border-top:1px solid var(--border);background:var(--surface);display:flex;gap:8px;align-items:center;}
+  .bottom-bar input{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 14px;font-family:'Inter',sans-serif;font-size:13px;color:var(--text);outline:none;}
+  .bottom-bar input:focus{border-color:var(--accent);}
+  .bottom-bar input::placeholder{color:var(--muted);}
+  .btn{padding:7px 14px;border-radius:7px;font-size:13px;font-family:'Inter',sans-serif;cursor:pointer;transition:all .15s;border:1px solid var(--border);background:var(--surface2);color:var(--text);}
+  .btn:hover{border-color:var(--border-hover);}
+  .btn-primary{background:var(--accent);border-color:var(--accent);color:white;}
+  .btn-primary:hover{background:#6a58e8;}
+  .loading-state{display:flex;align-items:center;gap:12px;padding:20px;color:var(--muted);font-size:13px;}
+  .spinner{width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .welcome-state{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;gap:12px;color:var(--muted);}
+  .welcome-icon{font-size:48px;}
+  .welcome-title{font-size:18px;font-weight:600;color:var(--text);}
+  .welcome-sub{font-size:13px;}
+  .quick-actions{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;justify-content:center;}
+  .quick-btn{padding:8px 16px;border-radius:8px;font-size:13px;font-family:'JetBrains Mono',monospace;cursor:pointer;border:1px solid var(--border);background:var(--surface2);color:var(--accent2);transition:all .15s;}
+  .quick-btn:hover{border-color:var(--accent);background:rgba(124,106,247,0.08);}
+  .tools-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:20px;}
+  .tool-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px;cursor:pointer;transition:all .2s;}
+  .tool-card:hover{border-color:var(--accent);background:rgba(124,106,247,0.04);}
+  .tool-icon{font-size:28px;margin-bottom:12px;}
+  .tool-name{font-size:14px;font-weight:600;margin-bottom:6px;}
+  .tool-desc{font-size:12px;color:var(--muted);line-height:1.5;}
+  .tag{padding:3px 8px;border-radius:4px;font-size:11px;background:rgba(124,106,247,0.1);color:var(--accent2);border:1px solid rgba(124,106,247,0.2);}
+  .tag-list{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px;}
+  .agent-page-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:16px;}
+  .agent-page-content{display:grid;grid-template-columns:1fr 300px;flex:1;overflow:hidden;}
+  .agent-chat{display:flex;flex-direction:column;border-right:1px solid var(--border);overflow:hidden;}
+  .chat-messages{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:12px;}
+  .chat-empty{text-align:center;color:var(--muted);font-size:13px;margin:auto;}
+  .msg{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;font-size:13px;line-height:1.7;color:#b0b0c0;font-family:'JetBrains Mono',monospace;white-space:pre-wrap;word-wrap:break-word;}
+  .msg-header{font-size:11px;color:var(--muted);margin-bottom:8px;font-family:'Inter',sans-serif;}
+  .chat-input{padding:16px 20px;border-top:1px solid var(--border);display:flex;gap:8px;}
+  .chat-input textarea{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-family:'Inter',sans-serif;font-size:13px;color:var(--text);resize:none;outline:none;height:60px;}
+  .chat-input textarea:focus{border-color:var(--accent);}
+  .agent-info-panel{padding:20px;overflow-y:auto;display:flex;flex-direction:column;gap:16px;}
+  .info-title{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;}
+  .info-card{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;}
+  .info-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;font-size:12px;}
+  .info-key{color:var(--muted);}
+  .info-val{color:var(--text);font-weight:500;}
+  ::-webkit-scrollbar{width:4px;height:4px;}
+  ::-webkit-scrollbar-track{background:transparent;}
+  ::-webkit-scrollbar-thumb{background:var(--surface2);border-radius:4px;}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo"><div class="logo-icon">🎮</div>Kivo Studios</div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showPage('studio',this)">Studio</button>
+    <button class="nav-tab" onclick="showPage('agents',this)">Agents</button>
+    <button class="nav-tab" onclick="showPage('tools',this)">Tools</button>
+  </div>
+  <div class="nav-right">
+    <div class="status-pill"><div class="dot"></div>15 agents online</div>
+  </div>
+</nav>
+<div class="layout">
+  <div class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Commands</div>
+      <button class="cmd-btn" onclick="run('/new-game',this)"><div class="cmd-icon" style="background:rgba(124,106,247,0.15);color:#a78bfa">✦</div>/new-game</button>
+      <button class="cmd-btn" onclick="run('/game-design-doc',this)"><div class="cmd-icon" style="background:rgba(59,130,246,0.15);color:#60a5fa">📋</div>/game-design-doc</button>
+      <button class="cmd-btn" onclick="run('/build',this)"><div class="cmd-icon" style="background:rgba(34,211,160,0.15);color:#22d3a0">⚡</div>/build</button>
+      <button class="cmd-btn" onclick="run('/playtest',this)"><div class="cmd-icon" style="background:rgba(245,158,11,0.15);color:#f59e0b">🎮</div>/playtest</button>
+      <button class="cmd-btn" onclick="run('/steam-page',this)"><div class="cmd-icon" style="background:rgba(239,68,68,0.15);color:#ef4444">🚀</div>/steam-page</button>
+      <button class="cmd-btn" onclick="run('/launch-plan',this)"><div class="cmd-icon" style="background:rgba(16,185,129,0.15);color:#10b981">📅</div>/launch-plan</button>
+    </div>
+    <div class="divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">History</div>
+      <div id="history-list"></div>
+    </div>
+  </div>
+  <div class="main">
+    <div id="page-studio" class="page active">
+      <div id="output" class="output-area">
+        <div class="welcome-state">
+          <div class="welcome-icon">🎮</div>
+          <div class="welcome-title">Throne Runners: Together</div>
+          <div class="welcome-sub">AI-powered game studio — select a command to begin</div>
+          <div class="quick-actions">
+            <button class="quick-btn" onclick="run('/new-game')">/new-game</button>
+            <button class="quick-btn" onclick="run('/game-design-doc')">/game-design-doc</button>
+            <button class="quick-btn" onclick="run('/build')">/build</button>
+            <button class="quick-btn" onclick="run('/playtest')">/playtest</button>
+          </div>
+        </div>
+      </div>
+      <div class="bottom-bar">
+        <input type="text" id="ctx" placeholder="Add context..." />
+        <button class="btn btn-primary" onclick="runCtx()">Run ↗</button>
+      </div>
+    </div>
+    <div id="page-agents" class="page" style="overflow-y:auto;">
+      <div id="agent-list-view" style="padding:20px;">
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;" id="agent-cards"></div>
+      </div>
+      <div id="agent-detail-view" style="display:none;flex-direction:column;height:100%;">
+        <div class="agent-page-header">
+          <button class="btn" onclick="closeAgentDetail()">← Back</button>
+          <div id="detail-avatar" style="width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:22px;"></div>
+          <div><div id="detail-name" style="font-size:17px;font-weight:600;"></div><div id="detail-role" style="font-size:12px;color:var(--muted);margin-top:2px;"></div></div>
+        </div>
+        <div class="agent-page-content" style="flex:1;overflow:hidden;">
+          <div class="agent-chat">
+            <div id="detail-messages" class="chat-messages"><div class="chat-empty">No output yet. Give this agent a task below.</div></div>
+            <div class="chat-input">
+              <textarea id="detail-task-input" placeholder="Give this agent a specific task..."></textarea>
+              <button class="btn btn-primary" onclick="runAgentTask()" style="height:60px;padding:0 16px;">Run</button>
+            </div>
+          </div>
+          <div class="agent-info-panel">
+            <div><div class="info-title">Agent Info</div><div class="info-card"><div class="info-row"><span class="info-key">Department</span><span id="detail-dept" class="info-val">—</span></div><div class="info-row"><span class="info-key">Status</span><span class="info-val" style="color:var(--green)">● Online</span></div><div class="info-row"><span class="info-key">Tasks run</span><span id="detail-tasks" class="info-val">0</span></div></div></div>
+            <div><div class="info-title">Responsibilities</div><div id="detail-resp" class="tag-list"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="page-tools" class="page">
+      <div class="tools-grid">
+        <div class="tool-card" onclick="downloadOutput()"><div class="tool-icon">📥</div><div class="tool-name">Export Output</div><div class="tool-desc">Download latest command output as markdown</div></div>
+        <div class="tool-card" onclick="copyLastOutput()"><div class="tool-icon">📋</div><div class="tool-name">Copy Output</div><div class="tool-desc">Copy latest output to clipboard</div></div>
+        <div class="tool-card" onclick="clearHistory()"><div class="tool-icon">🗑️</div><div class="tool-name">Clear History</div><div class="tool-desc">Clear all saved command history</div></div>
+        <div class="tool-card" onclick="showStats()"><div class="tool-icon">📊</div><div class="tool-name">Studio Stats</div><div class="tool-desc">View total commands, agents used, output generated</div></div>
+        <div class="tool-card" onclick="runAll()"><div class="tool-icon">⚡</div><div class="tool-name">Full Pipeline</div><div class="tool-desc">Run GDD → Build → Playtest in sequence</div></div>
+        <div class="tool-card" onclick="window.open('https://github.com/kivostudios/ai-game-studio','_blank')"><div class="tool-icon">🐙</div><div class="tool-name">GitHub</div><div class="tool-desc">Open project repository on GitHub</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+const AGENTS=[
+  {id:'creativedirector',name:'Creative Director',dept:'Design',emoji:'🎨',resp:['Game concepts','Creative vision','Art direction','Final approval']},
+  {id:'gamedesigner',name:'Game Designer',dept:'Design',emoji:'🎲',resp:['Core loop','Mechanics','GDD writing','Player journey']},
+  {id:'systemdesigner',name:'System Designer',dept:'Design',emoji:'⚙️',resp:['Balance','Numbers','Economy','Difficulty']},
+  {id:'leveldesigner',name:'Level Designer',dept:'Design',emoji:'🗺️',resp:['Maps','Level flow','Checkpoints','Pacing']},
+  {id:'technicaldirector',name:'Technical Director',dept:'Tech',emoji:'🔧',resp:['Architecture','Tech decisions','Code standards','Lead']},
+  {id:'gameplaydeveloper',name:'Gameplay Developer',dept:'Tech',emoji:'💻',resp:['C# scripts','Unity','Physics','AI systems']},
+  {id:'uiuxdesigner',name:'UI/UX Designer',dept:'Tech',emoji:'🖼️',resp:['Menus','HUD','Typography','UX flow']},
+  {id:'toolsengineer',name:'Tools Engineer',dept:'Tech',emoji:'🛠️',resp:['Pipeline','GitHub','Automation','Build']},
+  {id:'qalead',name:'QA Lead',dept:'Quality',emoji:'🔍',resp:['Test plans','Bug reports','Release readiness','QA']},
+  {id:'playtester',name:'Playtester',dept:'Quality',emoji:'🕹️',resp:['Player feedback','Fun factor','Pain points','Reports']},
+  {id:'producer',name:'Producer',dept:'Business',emoji:'📅',resp:['Schedule','Priorities','Risk','Coordination']},
+  {id:'marketinglead',name:'Marketing Lead',dept:'Business',emoji:'📣',resp:['Strategy','Audience','Messaging','Campaigns']},
+  {id:'contentcreator',name:'Content Creator',dept:'Business',emoji:'✍️',resp:['Devlogs','Social posts','Trailers','Press kit']},
+  {id:'steammanager',name:'Steam Manager',dept:'Business',emoji:'🚀',resp:['Store page','Tags','Pricing','Launch']},
+  {id:'analyticsspecialist',name:'Analytics Specialist',dept:'Data',emoji:'📊',resp:['Playtest data','Retention','Metrics','Reports']},
+];
+const DC={Design:{bg:'rgba(124,106,247,0.15)',color:'#a78bfa'},Tech:{bg:'rgba(34,211,160,0.15)',color:'#22d3a0'},Quality:{bg:'rgba(245,158,11,0.15)',color:'#f59e0b'},Business:{bg:'rgba(239,68,68,0.15)',color:'#ef4444'},Data:{bg:'rgba(59,130,246,0.15)',color:'#60a5fa'}};
+let history=JSON.parse(localStorage.getItem('kivo_history')||'[]');
+let currentCmd=null,selectedAgent=null,lastOutput='';
+let agentTasks=JSON.parse(localStorage.getItem('kivo_agent_tasks')||'{}');
+
+function ts(){const d=new Date();return d.getHours()+':'+String(d.getMinutes()).padStart(2,'0');}
+
+function showPage(p,btn){
+  document.querySelectorAll('.page').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(el=>el.classList.remove('active'));
+  document.getElementById('page-'+p).classList.add('active');
+  if(btn)btn.classList.add('active');
+  if(p==='agents')renderAgentCards();
+}
+
+function renderAgentCards(){
+  const c=document.getElementById('agent-cards');
+  c.innerHTML='';
+  AGENTS.forEach(a=>{
+    const col=DC[a.dept];
+    const el=document.createElement('div');
+    el.className='tool-card';
+    el.innerHTML=`<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;"><div style="width:36px;height:36px;border-radius:9px;background:${col.bg};color:${col.color};display:flex;align-items:center;justify-content:center;font-size:18px;">${a.emoji}</div><div><div style="font-size:13px;font-weight:600;">${a.name}</div><div style="font-size:11px;color:var(--muted);">${a.dept}</div></div><div style="margin-left:auto;width:7px;height:7px;border-radius:50%;background:var(--green);"></div></div><div style="display:flex;flex-wrap:wrap;gap:4px;">${a.resp.slice(0,2).map(r=>`<span style="font-size:10px;padding:2px 7px;border-radius:4px;background:${col.bg};color:${col.color};">${r}</span>`).join('')}</div>`;
+    el.onclick=()=>openAgentDetail(a);
+    c.appendChild(el);
+  });
+}
+
+function renderAgentMessages(a){
+  const msgs=document.getElementById('detail-messages');
+  const agentHistory=JSON.parse(localStorage.getItem('kivo_agent_msgs')||'{}');
+  const list=agentHistory[a.id]||[];
+  if(list.length===0){
+    msgs.innerHTML=`<div class="chat-empty">${a.emoji}<br><br>No output yet.</div>`;
+    return;
+  }
+  msgs.innerHTML='';
+  list.forEach(h=>{
+    const el=document.createElement('div');
+    el.className='msg';
+    el.innerHTML=`<div class="msg-task">→ ${h.task}</div><div class="msg-header">${a.emoji} ${a.name} · ${h.time}</div>${h.output}`;
+    msgs.appendChild(el);
+  });
+  msgs.scrollTop=msgs.scrollHeight;
+}
+
+function openAgentDetail(a){
+  selectedAgent=a;
+  const col=DC[a.dept];
+  document.getElementById('agent-list-view').style.display='none';
+  const dv=document.getElementById('agent-detail-view');
+  dv.style.display='flex';
+  const av=document.getElementById('detail-avatar');
+  av.style.cssText=`width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:22px;background:${col.bg};color:${col.color};`;
+  av.textContent=a.emoji;
+  document.getElementById('detail-name').textContent=a.name;
+  document.getElementById('detail-role').textContent=a.dept+' Department';
+  document.getElementById('detail-dept').textContent=a.dept;
+  document.getElementById('detail-tasks').textContent=agentTasks[a.id]||0;
+  document.getElementById('detail-resp').innerHTML=a.resp.map(r=>`<span class="tag">${r}</span>`).join('');
+  renderAgentMessages(a);
+}
+
+function closeAgentDetail(){
+  document.getElementById('agent-list-view').style.display='block';
+  document.getElementById('agent-detail-view').style.display='none';
+  selectedAgent=null;
+}
+
+async function runAgentTask(){
+  if(!selectedAgent)return;
+  const task=document.getElementById('detail-task-input').value.trim();
+  if(!task)return;
+  const msgs=document.getElementById('detail-messages');
+  msgs.innerHTML=`<div class="loading-state"><div class="spinner"></div>${selectedAgent.name} working...</div>`;
+  try{
+    const res=await fetch('/agent-task',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({agentId:selectedAgent.id,task})});
+    const data=await res.json();
+    const output=data.output||'No output';
+    agentTasks[selectedAgent.id]=(agentTasks[selectedAgent.id]||0)+1;
+    localStorage.setItem('kivo_agent_tasks',JSON.stringify(agentTasks));
+    document.getElementById('detail-tasks').textContent=agentTasks[selectedAgent.id];
+
+    // Mesajı kaydet
+    const agentHistory = JSON.parse(localStorage.getItem('kivo_agent_msgs') || '{}');
+    if (!agentHistory[selectedAgent.id]) agentHistory[selectedAgent.id] = [];
+    agentHistory[selectedAgent.id].push({ task, output, time: ts() });
+    localStorage.setItem('kivo_agent_msgs', JSON.stringify(agentHistory));
+
+    renderAgentMessages(selectedAgent);
+    document.getElementById('detail-task-input').value='';
+  }catch(e){msgs.innerHTML=`<div class="msg">Connection error.</div>`;}
+}
+
+function saveHistory(cmd,results){
+  history.unshift({cmd,results,time:ts(),id:Date.now()});
+  if(history.length>30)history=history.slice(0,30);
+  localStorage.setItem('kivo_history',JSON.stringify(history));
+  renderHistory();
+}
+
+function renderHistory(){
+  const list=document.getElementById('history-list');
+  list.innerHTML='';
+  history.slice(0,10).forEach((h,i)=>{
+    const el=document.createElement('div');
+    el.className='hist-item'+(i===0?' selected':'');
+    el.innerHTML=`<span class="hist-cmd">${h.cmd}</span><span class="hist-time">${h.time}</span>`;
+    el.onclick=()=>{
+      document.querySelectorAll('.hist-item').forEach(x=>x.classList.remove('selected'));
+      el.classList.add('selected');
+      renderOutput(h.results);
+      document.querySelectorAll('.nav-tab')[0].click();
+    };
+    list.appendChild(el);
+  });
+}
+
+function renderOutput(results){
+  const output=document.getElementById('output');
+  output.innerHTML='';
+  lastOutput=results.map(r=>`## ${r.agent}\n\n${r.output}`).join('\n\n---\n\n');
+  results.forEach(r=>{
+    const a=AGENTS.find(x=>x.id===r.agent)||{emoji:'🤖',name:r.agent,dept:'Design'};
+    const col=DC[a.dept]||{bg:'rgba(124,106,247,0.15)',color:'#a78bfa'};
+    const card=document.createElement('div');
+    card.className='agent-card';
+    card.innerHTML=`<div class="card-header" onclick="toggleCard(this)"><div class="card-avatar" style="background:${col.bg};color:${col.color};">${a.emoji}</div><span class="card-title">${a.name}</span><span class="card-badge">✓ done</span><span class="card-toggle">▼</span></div><div class="card-body">${r.output}</div>`;
+    output.appendChild(card);
+  });
+}
+
+function toggleCard(header){
+  const body=header.nextElementSibling;
+  const icon=header.querySelector('.card-toggle');
+  body.classList.toggle('collapsed');
+  icon.textContent=body.classList.contains('collapsed')?'▶':'▼';
+}
+
+async function run(command,btn){
+  currentCmd=command;
+  document.querySelectorAll('.cmd-btn').forEach(b=>b.classList.remove('active'));
+  if(btn&&btn.classList)btn.classList.add('active');
+  const output=document.getElementById('output');
+  output.innerHTML=`<div class="loading-state"><div class="spinner"></div>Running ${command} — agents initializing...</div>`;
+  try{
+    const ctx=document.getElementById('ctx')?.value||'';
+    const res=await fetch('/command',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({command,context:ctx||'Throne Runners: Together — 2-4 player co-op medieval game, throne carrying mechanic, physics-based, skeleton and knight enemies, low poly cartoon style, Steam PC'})});
+    const data=await res.json();
+    if(data.error){output.innerHTML=`<div class="agent-card"><div class="card-body">Error: ${data.error}</div></div>`;return;}
+    saveHistory(command,data.results);
+    renderOutput(data.results);
+  }catch(e){output.innerHTML=`<div class="agent-card"><div class="card-body">Connection error.</div></div>`;}
+}
+
+function runCtx(){const ctx=document.getElementById('ctx').value.trim();run(currentCmd||'/new-game');}
+document.getElementById('ctx').addEventListener('keypress',e=>{if(e.key==='Enter')runCtx();});
+function downloadOutput(){if(!lastOutput){alert('No output yet.');return;}const b=new Blob([lastOutput],{type:'text/markdown'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`kivo-studio-${Date.now()}.md`;a.click();}
+function copyLastOutput(){if(!lastOutput){alert('No output yet.');return;}navigator.clipboard.writeText(lastOutput).then(()=>alert('Copied!'));}
+function clearHistory(){if(!confirm('Clear all history?'))return;history=[];localStorage.removeItem('kivo_history');renderHistory();alert('Cleared.');}
+function showStats(){alert(`Studio Stats\n\nCommands run: ${history.length}\nAgents available: 15`);}
+async function runAll(){if(!confirm('Run full pipeline?'))return;await run('/game-design-doc');await run('/build');await run('/playtest');}
+renderHistory();
+if(history.length>0)renderOutput(history[0].results);
+</script>
+</body>
+</html>
