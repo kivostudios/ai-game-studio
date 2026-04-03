@@ -2,6 +2,18 @@ require('dotenv').config();
 const fastify = require('fastify')({ logger: false });
 const path = require('path');
 const { executeCommand } = require('./routes/commands');
+const { createClient } = require('@supabase/supabase-js');
+
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
+
+async function loadState() {
+  const { data } = await supabase.from('studio_state').select('state').eq('id', 'main').single();
+  return data?.state || null;
+}
+
+async function saveState(state) {
+  await supabase.from('studio_state').upsert({ id: 'main', state, updated_at: new Date().toISOString() });
+}
 
 fastify.register(require('@fastify/static'), {
   root: path.join(__dirname, 'public'),
@@ -17,7 +29,13 @@ fastify.get('/ws', { websocket: true }, (socket) => {
   wsClients.add(socket);
   if (sharedState) socket.send(JSON.stringify({ type: 'sync', state: sharedState }));
   socket.on('message', (raw) => {
-    try { const m = JSON.parse(raw.toString()); if (m.type === 'sync') sharedState = m.state; } catch(_) {}
+    try {
+      const m = JSON.parse(raw.toString());
+      if (m.type === 'sync') {
+        sharedState = m.state;
+        saveState(m.state).catch(() => {});
+      }
+    } catch(_) {}
     for (const c of wsClients) {
       if (c !== socket && c.readyState === 1) c.send(raw.toString());
     }
@@ -26,9 +44,10 @@ fastify.get('/ws', { websocket: true }, (socket) => {
 });
 
 fastify.post('/auth', async (request, reply) => {
-  const { password } = request.body;
-  const correct = process.env.STUDIO_PASSWORD || 'kivo2024';
-  return { ok: password === correct };
+  const { username, password } = request.body;
+  const correctUser = process.env.ADMIN_USERNAME || 'admin';
+  const correctPass = process.env.ADMIN_PASSWORD || 'kivo2024';
+  return { ok: username === correctUser && password === correctPass };
 });
 
 fastify.get('/health', async () => {
@@ -57,6 +76,8 @@ fastify.post('/command', async (request, reply) => {
 
 const start = async () => {
   try {
+    sharedState = await loadState();
+    console.log(sharedState ? '📦 State loaded from Supabase' : '🆕 No saved state yet');
     await fastify.listen({ port: process.env.PORT || 3000, host: '0.0.0.0' });
     console.log('🎮 AI Game Studio backend running on port 3000');
   } catch (err) {

@@ -175,9 +175,10 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;heigh
     <div class="login-logo">🎮</div>
     <div class="login-title">Kivo Studios</div>
     <div class="login-sub">Game Studio OS — Private Access</div>
-    <input type="password" id="pw" class="login-input" placeholder="Enter password..." />
+    <input type="text" id="un" class="login-input" placeholder="Username" autocomplete="username" />
+    <input type="password" id="pw" class="login-input" placeholder="Password" autocomplete="current-password" />
     <button class="login-btn" onclick="doLogin()">Enter Studio</button>
-    <div class="login-err" id="pw-err">Incorrect password</div>
+    <div class="login-err" id="pw-err">Incorrect username or password</div>
   </div>
 </div>
 
@@ -583,9 +584,10 @@ function S(key) { return settings[key] !== undefined ? settings[key] : DEF[key];
 
 // ── AUTH ──────────────────────────────────────────────────────────────────
 async function doLogin() {
-  const pw = document.getElementById('pw').value;
+  const username = document.getElementById('un').value;
+  const password = document.getElementById('pw').value;
   try {
-    const res = await fetch('/auth',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pw})});
+    const res = await fetch('/auth',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username,password})});
     const d = await res.json();
     if (d.ok) { localStorage.setItem('kivo_auth','1'); boot(); }
     else { document.getElementById('pw-err').style.display='block'; }
