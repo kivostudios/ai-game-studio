@@ -659,13 +659,6 @@ function renderSidebar() {
   const s = document.getElementById('sidebar');
   if (currentSection === 'studio') {
     s.innerHTML = `
-      <div class="sidebar-header">Workflows</div>
-      ${COMMANDS.map(c => `
-        <div class="sidebar-item ${currentCmd===c.id?'active':''}" onclick="runCmd('${c.id}')">
-          <span class="si-icon">${c.icon}</span> ${c.label}
-        </div>
-      `).join('')}
-      <div class="sidebar-sep"></div>
       <div class="sidebar-header">History</div>
       ${history.slice(0,8).map((h,i) => `
         <div class="sidebar-item ${i===0?'active':''}" onclick="loadHistory(${i})">
