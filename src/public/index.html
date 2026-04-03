@@ -453,24 +453,84 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-ser
 
     <!-- STUDIO SECTION -->
     <div id="section-studio" style="display:flex;flex-direction:column;flex:1;overflow:hidden;">
-      <div class="studio-output" id="studio-output">
-        <div class="welcome-studio">
-          <div class="welcome-studio-icon">🎮</div>
-          <div class="welcome-studio-title">Throne Runners: Together</div>
-          <div class="welcome-studio-sub">Select a workflow to begin</div>
-          <div class="welcome-cmds">
-            <div class="welcome-cmd" onclick="runCmd('/new-game')">/new-game</div>
-            <div class="welcome-cmd" onclick="runCmd('/game-design-doc')">/game-design-doc</div>
-            <div class="welcome-cmd" onclick="runCmd('/build')">/build</div>
-            <div class="welcome-cmd" onclick="runCmd('/playtest')">/playtest</div>
-            <div class="welcome-cmd" onclick="runCmd('/steam-page')">/steam-page</div>
+
+      <!-- DASHBOARD -->
+      <div id="studio-home" style="flex:1;overflow-y:auto;padding:20px 24px;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+          <div style="flex:1;">
+            <div style="font-size:18px;font-weight:600;">Throne Runners: Together</div>
+            <div style="font-size:12px;color:var(--text3);margin-top:2px;">Build Phase &middot; Week 2 of 6 &middot; <span style="color:var(--green)">&#9679; Active</span></div>
+          </div>
+          <button class="tba-btn" onclick="runCmd('/build')">Build &#9889;</button>
+          <button class="tba-btn primary" onclick="openCmd()">&#8984;K Command</button>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:20px;">
+          <div class="stat-card"><div class="stat-label">API Spend</div><div class="stat-value" style="font-size:20px;">$<span id="dash-spend">0.00</span></div><div class="stat-sub">Est. session</div></div>
+          <div class="stat-card"><div class="stat-label">Commands</div><div class="stat-value" style="font-size:20px;" id="dash-cmds">0</div><div class="stat-sub">All time</div></div>
+          <div class="stat-card"><div class="stat-label">Tokens</div><div class="stat-value" style="font-size:20px;" id="dash-tokens">0</div><div class="stat-sub">Est. total</div></div>
+          <div class="stat-card"><div class="stat-label">Agents</div><div class="stat-value" style="font-size:20px;">13</div><div class="stat-sub">Online</div></div>
+          <div class="stat-card"><div class="stat-label">Progress</div><div class="stat-value" style="font-size:20px;">33%</div><div style="margin-top:6px;height:4px;background:var(--surface2);border-radius:2px;"><div style="width:33%;height:100%;background:var(--accent);border-radius:2px;"></div></div></div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 300px;gap:16px;margin-bottom:16px;">
+          <div class="chart-card">
+            <div class="chart-title" style="display:flex;align-items:center;"><span style="flex:1;">Recent Activity</span><span style="font-size:11px;color:var(--accent2);cursor:pointer;" onclick="switchSection('analytics')">View all &rarr;</span></div>
+            <div id="dash-activity" style="display:flex;flex-direction:column;gap:6px;margin-top:8px;"><div style="font-size:12px;color:var(--text3);padding:8px 0;text-align:center;">No activity yet. Run a command.</div></div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div class="chart-card">
+              <div class="chart-title">Project Phases</div>
+              <div style="display:flex;flex-direction:column;gap:6px;margin-top:8px;">
+                <div style="display:flex;align-items:center;gap:8px;font-size:12px;"><span style="width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0;"></span><span style="flex:1;color:var(--text);">Concept</span><span style="color:var(--green);font-size:10px;">Done</span></div>
+                <div style="display:flex;align-items:center;gap:8px;font-size:12px;"><span style="width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0;"></span><span style="flex:1;color:var(--text);">Design</span><span style="color:var(--green);font-size:10px;">Done</span></div>
+                <div style="display:flex;align-items:center;gap:8px;font-size:12px;"><span style="width:8px;height:8px;border-radius:50%;background:var(--accent);flex-shrink:0;animation:pulse 2s infinite;"></span><span style="flex:1;color:var(--text);font-weight:500;">Build</span><span style="color:var(--accent2);font-size:10px;">Active</span></div>
+                <div style="display:flex;align-items:center;gap:8px;font-size:12px;"><span style="width:8px;height:8px;border-radius:50%;background:var(--surface3);flex-shrink:0;"></span><span style="flex:1;color:var(--text3);">QA</span><span style="color:var(--text3);font-size:10px;">Pending</span></div>
+                <div style="display:flex;align-items:center;gap:8px;font-size:12px;"><span style="width:8px;height:8px;border-radius:50%;background:var(--surface3);flex-shrink:0;"></span><span style="flex:1;color:var(--text3);">Launch</span><span style="color:var(--text3);font-size:10px;">Pending</span></div>
+              </div>
+            </div>
+            <div class="chart-card">
+              <div class="chart-title">Most Used Agents</div>
+              <div id="dash-agent-load" style="display:flex;flex-direction:column;gap:5px;margin-top:8px;"><div style="font-size:12px;color:var(--text3);">No data yet.</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+          <div class="chart-card">
+            <div class="chart-title" style="display:flex;align-items:center;"><span style="flex:1;">Last Output</span><span id="dash-last-cmd" style="font-size:11px;color:var(--accent2);cursor:pointer;" onclick="showFullOutput()"></span></div>
+            <div id="dash-last-output" style="margin-top:8px;font-size:12px;color:var(--text2);line-height:1.6;max-height:160px;overflow:hidden;font-family:'JetBrains Mono',monospace;"><div style="color:var(--text3);">No output yet.</div></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Quick Actions</div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;">
+              <button class="tba-btn" style="font-size:12px;" onclick="runCmd('/new-game')">&#10022; New Concept</button>
+              <button class="tba-btn" style="font-size:12px;" onclick="runCmd('/game-design-doc')">&#128203; GDD</button>
+              <button class="tba-btn" style="font-size:12px;" onclick="runCmd('/build')">&#9889; Build</button>
+              <button class="tba-btn" style="font-size:12px;" onclick="runCmd('/playtest')">&#127918; Playtest</button>
+              <button class="tba-btn" style="font-size:12px;" onclick="runCmd('/steam-page')">&#128640; Steam</button>
+              <button class="tba-btn" style="font-size:12px;" onclick="runCmd('/launch-plan')">&#128197; Launch</button>
+              <button class="tba-btn" style="font-size:12px;" onclick="switchSection('agents')">&#129302; Agents</button>
+              <button class="tba-btn" style="font-size:12px;" onclick="switchSection('analytics')">&#128202; Analytics</button>
+            </div>
           </div>
         </div>
       </div>
-      <div class="studio-bottom">
-        <input type="text" id="ctx-input" placeholder="Add context (optional)..." />
-        <button class="tba-btn primary" onclick="runFromCtx()">Run ↗</button>
+
+      <!-- OUTPUT VIEW -->
+      <div id="studio-output-view" style="display:none;flex:1;flex-direction:column;overflow:hidden;">
+        <div style="padding:10px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0;">
+          <button class="tba-btn" onclick="showDashboard()">&#8592; Dashboard</button>
+          <span id="output-view-title" style="font-size:13px;font-weight:500;flex:1;"></span>
+          <button class="tba-btn" onclick="downloadOutput()">Export &#8595;</button>
+        </div>
+        <div class="studio-output" id="studio-output"></div>
+        <div class="studio-bottom">
+          <input type="text" id="ctx-input" placeholder="Add context (optional)..." />
+          <button class="tba-btn primary" onclick="runFromCtx()">Run Again &#8599;</button>
+        </div>
       </div>
+
     </div>
 
     <!-- AGENTS SECTION -->
@@ -659,6 +719,13 @@ function renderSidebar() {
   const s = document.getElementById('sidebar');
   if (currentSection === 'studio') {
     s.innerHTML = `
+      <div class="sidebar-header">Workflows</div>
+      ${COMMANDS.map(c => `
+        <div class="sidebar-item ${currentCmd===c.id?'active':''}" onclick="runCmd('${c.id}')">
+          <span class="si-icon">${c.icon}</span> ${c.label}
+        </div>
+      `).join('')}
+      <div class="sidebar-sep"></div>
       <div class="sidebar-header">History</div>
       ${history.slice(0,8).map((h,i) => `
         <div class="sidebar-item ${i===0?'active':''}" onclick="loadHistory(${i})">
@@ -799,33 +866,117 @@ async function runAgentTask() {
 }
 
 // ── STUDIO / RUN CMD ─────────────────────────────────────────────────────
+function showDashboard() {
+  document.getElementById('studio-home').style.display = 'block';
+  document.getElementById('studio-output-view').style.display = 'none';
+  updateDashboard();
+}
+
+function showFullOutput() {
+  if (!lastOutput) return;
+  document.getElementById('studio-home').style.display = 'none';
+  document.getElementById('studio-output-view').style.display = 'flex';
+}
+
+function updateDashboard() {
+  const totalSize = analyticsLog.reduce((a,l)=>a+l.size,0);
+  const estTokens = Math.round(totalSize/4);
+  const estCost = (estTokens * 0.000003).toFixed(4);
+  const spendEl = document.getElementById('dash-spend');
+  const tokensEl = document.getElementById('dash-tokens');
+  const cmdsEl = document.getElementById('dash-cmds');
+  if (spendEl) spendEl.textContent = estCost;
+  if (tokensEl) tokensEl.textContent = estTokens.toLocaleString();
+  if (cmdsEl) cmdsEl.textContent = history.length;
+
+  const actEl = document.getElementById('dash-activity');
+  if (actEl && analyticsLog.length > 0) {
+    actEl.innerHTML = analyticsLog.slice(-6).reverse().map(l => {
+      const a = AGENTS.find(x=>x.id===l.id);
+      const icon = a ? a.emoji : (l.type==='command'?'&#9889;':'&#129302;');
+      const name = a ? a.name : l.id;
+      return '<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);">'
+        + '<span style="font-size:14px;">'+icon+'</span>'
+        + '<span style="flex:1;font-size:12px;color:var(--text);">'+name+'</span>'
+        + '<span style="font-size:10px;color:var(--text3);">~'+Math.round(l.size/4)+' tokens</span>'
+        + '</div>';
+    }).join('');
+  }
+
+  const byAgent = {};
+  analyticsLog.filter(l=>l.type==='agent-task').forEach(t => { byAgent[t.id]=(byAgent[t.id]||0)+t.size; });
+  const agentLoadEl = document.getElementById('dash-agent-load');
+  if (agentLoadEl) {
+    const entries = Object.entries(byAgent).sort((a,b)=>b[1]-a[1]).slice(0,5);
+    if (entries.length > 0) {
+      const max = entries[0][1];
+      agentLoadEl.innerHTML = entries.map(function(e) {
+        const id=e[0],size=e[1];
+        const a = AGENTS.find(x=>x.id===id);
+        return '<div class="bar-row">'
+          + '<span class="bar-label" style="width:80px;">'+(a?a.emoji+' '+a.name.split(' ')[0]:id)+'</span>'
+          + '<div class="bar-track"><div class="bar-fill" style="width:'+Math.round(size/max*100)+'%"></div></div>'
+          + '<span class="bar-val">'+Math.round(size/4)+'tk</span>'
+          + '</div>';
+      }).join('');
+    } else {
+      agentLoadEl.innerHTML = '<div style="font-size:12px;color:var(--text3);">No data yet.</div>';
+    }
+  }
+
+  const lastCmdEl = document.getElementById('dash-last-cmd');
+  const lastOutEl = document.getElementById('dash-last-output');
+  if (history.length > 0 && lastCmdEl && lastOutEl) {
+    const h = history[0];
+    lastCmdEl.textContent = h.cmd + ' — View full';
+    const preview = (h.results[0]&&h.results[0].output) ? h.results[0].output.substring(0,300) : '';
+    lastOutEl.innerHTML = '<div>'+preview+(preview.length>=300?'&hellip;':'')+'</div>';
+  }
+}
+
 async function runCmd(command, context) {
   currentCmd = command;
   switchSection('studio');
-  renderSidebar();
+  document.getElementById('studio-home').style.display = 'none';
+  const ov = document.getElementById('studio-output-view');
+  ov.style.display = 'flex';
+  const titleEl = document.getElementById('output-view-title');
+  if (titleEl) titleEl.textContent = command;
   const output = document.getElementById('studio-output');
-  output.innerHTML = `<div class="loading-state"><div class="spinner"></div>Running ${command} — agents initializing...</div>`;
+  output.innerHTML = '<div class="loading-state"><div class="spinner"></div>Running '+command+' &#8212; agents initializing...</div>';
   try {
-    const ctx = context || document.getElementById('ctx-input').value || 'Throne Runners: Together — 2-4 player co-op medieval game, throne carrying mechanic, physics-based, skeleton and knight enemies, low poly cartoon style, Steam PC';
-    const res = await fetch('/command', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({command,context:ctx})});
+    const ctxInput = document.getElementById('ctx-input');
+    const ctx = context || (ctxInput?ctxInput.value:'') || 'Throne Runners: Together';
+    const res = await fetch('/command', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({command:command,context:ctx})});
     const data = await res.json();
-    if (data.error) { output.innerHTML = `<div class="output-card"><div class="output-card-body">Error: ${data.error}</div></div>`; return; }
+    if (data.error) { output.innerHTML = '<div class="output-card"><div class="output-card-body">Error: '+data.error+'</div></div>'; return; }
     history.unshift({cmd:command,results:data.results,time:ts(),id:Date.now()});
     if (history.length>30) history=history.slice(0,30);
     localStorage.setItem('kivo_history', JSON.stringify(history));
-    logAnalytics('command', command, data.results?.reduce((a,r)=>a+r.output.length,0)||0);
+    logAnalytics('command', command, data.results ? data.results.reduce(function(a,r){return a+r.output.length;},0) : 0);
     renderSidebar();
     renderOutput(data.results);
-    lastOutput = data.results.map(r=>`## ${r.agent}\n\n${r.output}`).join('\n\n---\n\n');
-  } catch(e) { output.innerHTML = `<div class="output-card"><div class="output-card-body">Connection error.</div></div>`; }
+    lastOutput = data.results.map(function(r){return '## '+r.agent+'\n\n'+r.output;}).join('\n\n---\n\n');
+    updateDashboard();
+  } catch(e) { output.innerHTML = '<div class="output-card"><div class="output-card-body">Connection error.</div></div>'; }
 }
 
-function runFromCtx() { runCmd(currentCmd||'/new-game'); }
-document.getElementById('ctx-input').addEventListener('keypress', e => { if(e.key==='Enter') runFromCtx(); });
+function runFromCtx() {
+  const ctxInput = document.getElementById('ctx-input');
+  runCmd(currentCmd||'/new-game', ctxInput?ctxInput.value:'');
+}
 
 function loadHistory(i) {
   const h = history[i];
-  if (h) { switchSection('studio'); renderOutput(h.results); }
+  if (!h) return;
+  switchSection('studio');
+  document.getElementById('studio-home').style.display = 'none';
+  const ov = document.getElementById('studio-output-view');
+  ov.style.display = 'flex';
+  const titleEl = document.getElementById('output-view-title');
+  if (titleEl) titleEl.textContent = h.cmd + ' · ' + h.time;
+  renderOutput(h.results);
+  lastOutput = h.results.map(function(r){return '## '+r.agent+'\n\n'+r.output;}).join('\n\n---\n\n');
 }
 
 function renderOutput(results) {
@@ -956,7 +1107,7 @@ if (localStorage.getItem('kivo_auth') === '1') {
   renderSidebar();
   renderAgentGrid();
   updateAnalytics();
-  if (history.length > 0) renderOutput(history[0].results);
+  updateDashboard();
 }
 </script>
 </body>
