@@ -30,6 +30,9 @@ const commandMap = {
     { agent: 'producer', task: 'Lansman için tam kontrol listesi oluştur.' },
     { agent: 'marketinglead', task: 'Lansman günü pazarlama planı oluştur.' },
     { agent: 'steammanager', task: 'Steam lansman stratejisi oluştur.' }
+  ],
+  '/concept-art': [
+    { agent: 'conceptart', task: 'Throne Runners: Together için konsept sanat üret.' }
   ]
 };
 

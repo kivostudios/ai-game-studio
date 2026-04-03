@@ -5,5 +5,8 @@
   "scripts": {
     "start": "node src/index.js"
   },
-  "type": "commonjs"
+  "type": "commonjs",
+  "dependencies": {
+    "openai": "^6.33.0"
+  }
 }
