@@ -589,7 +589,7 @@ async function doLogin() {
   try {
     const res = await fetch('/auth',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username,password})});
     const d = await res.json();
-    if (d.ok) { localStorage.setItem('kivo_auth','1'); boot(); }
+    if (d.ok) { localStorage.setItem('kivo_auth_v2','1'); boot(); }
     else { document.getElementById('pw-err').style.display='block'; }
   } catch(e) { document.getElementById('pw-err').style.display='block'; }
 }
@@ -606,7 +606,7 @@ function boot() {
   updateAnalytics();
   initSettingsForm();
 }
-if (localStorage.getItem('kivo_auth')==='1') boot();
+if (localStorage.getItem('kivo_auth_v2')==='1') boot();
 
 // ── SETTINGS ──────────────────────────────────────────────────────────────
 function applySettings() {
