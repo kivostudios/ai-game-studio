@@ -437,6 +437,13 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;heigh
             <span class="settings-label">Default AI Context</span>
             <textarea class="settings-input" id="set-context" rows="3" style="height:auto;resize:vertical;">Throne Runners: Together — 2-4 player co-op medieval game, throne carrying mechanic, physics-based, skeleton and knight enemies, low poly cartoon style, Steam PC</textarea>
           </div>
+          <div class="settings-section">
+  <div class="settings-title">Game Design Document</div>
+  <div class="settings-row" style="align-items:flex-start;">
+    <span class="settings-label" style="padding-top:8px;">GDD Content</span>
+    <textarea class="settings-input" id="set-gdd" rows="12" style="height:auto;resize:vertical;" placeholder="Paste your full GDD here..."></textarea>
+  </div>
+</div>
         </div>
 
         <button class="save-btn" onclick="saveSettings()">Save Settings</button>
@@ -570,6 +577,7 @@ function applySettings() {
 }
 
 function initSettingsForm() {
+  document.getElementById('set-gdd').value = S('gdd') || '';
   document.getElementById('set-name').value = S('name');
   document.getElementById('set-desc').value = S('desc');
   document.getElementById('set-studio').value = S('studio');
@@ -600,6 +608,7 @@ function saveSettings() {
   settings.totalWeeks = parseInt(document.getElementById('set-total-weeks').value)||6;
   settings.activePhase = parseInt(document.getElementById('set-active-phase').value)||0;
   settings.context = document.getElementById('set-context').value;
+  settings.gdd = document.getElementById('set-gdd').value;
   phases = PHASE_DEFS.map((_,i)=>parseInt(document.getElementById('phase-pct-'+i)?.value||0));
   localStorage.setItem('kivo_settings',JSON.stringify(settings));
   localStorage.setItem('kivo_phases',JSON.stringify(phases));
@@ -848,7 +857,8 @@ async function runCmd(command,context) {
   output.innerHTML='<div class="loading-state"><div class="spinner"></div>Running '+command+' — agents initializing...</div>';
   try {
     const ctxInput=document.getElementById('ctx-input');
-    const ctx=context||(ctxInput?ctxInput.value:'')||S('context');
+    const gdd = S('gdd') ? '\n\nGame Design Document:\n' + S('gdd') : '';
+    const ctx = context||(ctxInput?ctxInput.value:'')||S('context')+gdd;
     const res=await fetch('/command',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({command:command,context:ctx})});
     const data=await res.json();
     if(data.error){output.innerHTML='<div class="output-card"><div class="oc-body">Error: '+data.error+'</div></div>';return;}
