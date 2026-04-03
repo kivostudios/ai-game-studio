@@ -6,396 +6,165 @@
 <title>Kivo Studios — Game Studio OS</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
-:root {
-  --bg: #080810;
-  --surface: #0f0f1a;
-  --surface2: #161625;
-  --surface3: #1e1e30;
-  --border: rgba(255,255,255,0.05);
-  --border2: rgba(255,255,255,0.1);
-  --text: #e2e2f0;
-  --text2: #9090b0;
-  --text3: #5a5a78;
-  --accent: #6c5ce7;
-  --accent2: #a29bfe;
-  --green: #00cec9;
-  --amber: #fdcb6e;
-  --red: #e17055;
-  --blue: #0984e3;
-  --purple: #6c5ce7;
-}
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; height: 100vh; display: flex; overflow: hidden; }
-
+:root{--bg:#080810;--surface:#0f0f1a;--surface2:#161625;--surface3:#1e1e30;--border:rgba(255,255,255,0.05);--border2:rgba(255,255,255,0.1);--text:#e2e2f0;--text2:#9090b0;--text3:#5a5a78;--accent:#6c5ce7;--accent2:#a29bfe;--green:#00cec9;--amber:#fdcb6e;--red:#e17055;--blue:#0984e3;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;height:100vh;display:flex;overflow:hidden;}
 /* LOGIN */
-#login {
-  position: fixed; inset: 0; background: var(--bg);
-  display: flex; align-items: center; justify-content: center; z-index: 9999;
-}
-.login-box {
-  width: 360px; padding: 48px 40px; background: var(--surface);
-  border: 1px solid var(--border2); border-radius: 16px; text-align: center;
-}
-.login-logo {
-  width: 52px; height: 52px; border-radius: 14px;
-  background: linear-gradient(135deg, var(--accent), #4834d4);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 26px; margin: 0 auto 20px;
-}
-.login-title { font-size: 20px; font-weight: 600; margin-bottom: 4px; }
-.login-sub { font-size: 13px; color: var(--text2); margin-bottom: 28px; }
-.login-input {
-  width: 100%; background: var(--surface2); border: 1px solid var(--border2);
-  border-radius: 8px; padding: 11px 14px; font-size: 14px; color: var(--text);
-  outline: none; margin-bottom: 10px; font-family: 'Inter', sans-serif;
-}
-.login-input:focus { border-color: var(--accent); }
-.login-btn {
-  width: 100%; background: var(--accent); border: none; border-radius: 8px;
-  padding: 11px; font-size: 14px; color: white; cursor: pointer;
-  font-family: 'Inter', sans-serif; font-weight: 500; transition: opacity .15s;
-}
-.login-btn:hover { opacity: .85; }
-.login-err { color: var(--red); font-size: 12px; margin-top: 8px; display: none; }
-
+#login{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:9999;}
+.login-box{width:360px;padding:48px 40px;background:var(--surface);border:1px solid var(--border2);border-radius:16px;text-align:center;}
+.login-logo{width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,var(--accent),#4834d4);display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 20px;}
+.login-title{font-size:20px;font-weight:600;margin-bottom:4px;}
+.login-sub{font-size:13px;color:var(--text2);margin-bottom:28px;}
+.login-input{width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:8px;padding:11px 14px;font-size:14px;color:var(--text);outline:none;margin-bottom:10px;font-family:'Inter',sans-serif;}
+.login-input:focus{border-color:var(--accent);}
+.login-btn{width:100%;background:var(--accent);border:none;border-radius:8px;padding:11px;font-size:14px;color:white;cursor:pointer;font-family:'Inter',sans-serif;font-weight:500;}
+.login-btn:hover{opacity:.85;}
+.login-err{color:var(--red);font-size:12px;margin-top:8px;display:none;}
 /* LAYOUT */
-#app { display: flex; width: 100%; height: 100vh; }
-
-/* LEFT NAV */
-.leftnav {
-  width: 56px; background: var(--surface); border-right: 1px solid var(--border);
-  display: flex; flex-direction: column; align-items: center;
-  padding: 12px 0; gap: 4px; flex-shrink: 0;
-}
-.nav-logo {
-  width: 32px; height: 32px; border-radius: 8px;
-  background: linear-gradient(135deg, var(--accent), #4834d4);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 16px; margin-bottom: 16px;
-}
-.nav-icon {
-  width: 36px; height: 36px; border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 16px; cursor: pointer; transition: all .15s;
-  color: var(--text3); position: relative;
-}
-.nav-icon:hover { background: var(--surface2); color: var(--text2); }
-.nav-icon.active { background: var(--surface2); color: var(--accent2); }
-.nav-icon .tooltip {
-  position: absolute; left: 48px; background: var(--surface3);
-  border: 1px solid var(--border2); border-radius: 6px;
-  padding: 4px 10px; font-size: 12px; color: var(--text);
-  white-space: nowrap; pointer-events: none; opacity: 0;
-  transition: opacity .15s; z-index: 100;
-}
-.nav-icon:hover .tooltip { opacity: 1; }
-.nav-sep { width: 20px; height: 1px; background: var(--border); margin: 4px 0; }
-.nav-bottom { margin-top: auto; }
-
+#app{display:flex;width:100%;height:100vh;}
+/* LEFTNAV */
+.leftnav{width:56px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;align-items:center;padding:12px 0;gap:4px;flex-shrink:0;}
+.nav-logo{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#4834d4);display:flex;align-items:center;justify-content:center;font-size:16px;margin-bottom:16px;}
+.nav-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;transition:all .15s;color:var(--text3);position:relative;}
+.nav-icon:hover{background:var(--surface2);color:var(--text2);}
+.nav-icon.active{background:var(--surface2);color:var(--accent2);}
+.nav-icon .tip{position:absolute;left:48px;background:var(--surface3);border:1px solid var(--border2);border-radius:6px;padding:4px 10px;font-size:12px;color:var(--text);white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .15s;z-index:100;}
+.nav-icon:hover .tip{opacity:1;}
+.nav-sep{width:20px;height:1px;background:var(--border);margin:4px 0;}
+.nav-bottom{margin-top:auto;}
 /* SIDEBAR */
-.sidebar {
-  width: 220px; background: var(--surface); border-right: 1px solid var(--border);
-  display: flex; flex-direction: column; flex-shrink: 0; overflow-y: auto;
-}
-.sidebar-header {
-  padding: 16px 16px 8px; font-size: 11px; font-weight: 600;
-  color: var(--text3); text-transform: uppercase; letter-spacing: .8px;
-}
-.sidebar-item {
-  display: flex; align-items: center; gap: 8px;
-  padding: 7px 12px; margin: 1px 6px; border-radius: 6px;
-  font-size: 13px; color: var(--text2); cursor: pointer; transition: all .15s;
-}
-.sidebar-item:hover { background: var(--surface2); color: var(--text); }
-.sidebar-item.active { background: var(--surface2); color: var(--text); }
-.sidebar-item .si-icon { font-size: 14px; width: 18px; text-align: center; }
-.sidebar-item .si-badge {
-  margin-left: auto; font-size: 10px; padding: 1px 6px;
-  border-radius: 10px; background: var(--accent); color: white;
-}
-.sidebar-sep { height: 1px; background: var(--border); margin: 8px 12px; }
-
+.sidebar{width:220px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;}
+.sidebar-header{padding:16px 16px 8px;font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;}
+.sidebar-item{display:flex;align-items:center;gap:8px;padding:7px 12px;margin:1px 6px;border-radius:6px;font-size:13px;color:var(--text2);cursor:pointer;transition:all .15s;}
+.sidebar-item:hover{background:var(--surface2);color:var(--text);}
+.sidebar-item.active{background:var(--surface2);color:var(--text);}
+.si-icon{font-size:14px;width:18px;text-align:center;}
+.sidebar-sep{height:1px;background:var(--border);margin:8px 12px;}
 /* MAIN */
-.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-
-/* TOP BAR */
-.topbar {
-  height: 48px; background: var(--surface); border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; padding: 0 20px; gap: 16px; flex-shrink: 0;
-}
-.topbar-title { font-size: 14px; font-weight: 500; flex: 1; }
-.topbar-pills { display: flex; gap: 6px; }
-.pill {
-  padding: 4px 10px; border-radius: 20px; font-size: 11px;
-  background: var(--surface2); border: 1px solid var(--border2);
-  color: var(--text2); cursor: pointer; transition: all .15s;
-}
-.pill:hover { border-color: var(--accent); color: var(--accent2); }
-.pill.active { background: rgba(108,92,231,.15); border-color: var(--accent); color: var(--accent2); }
-.topbar-actions { display: flex; gap: 6px; align-items: center; }
-.tba-btn {
-  padding: 5px 12px; border-radius: 6px; font-size: 12px;
-  border: 1px solid var(--border2); background: var(--surface2);
-  color: var(--text2); cursor: pointer; transition: all .15s;
-  font-family: 'Inter', sans-serif;
-}
-.tba-btn:hover { color: var(--text); border-color: var(--border2); }
-.tba-btn.primary { background: var(--accent); border-color: var(--accent); color: white; }
-.tba-btn.primary:hover { opacity: .85; }
-
-/* CONTENT */
-.content { flex: 1; overflow-y: auto; padding: 24px; }
-
-/* CARDS */
-.stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
-.stat-card {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: 10px; padding: 16px;
-}
-.stat-label { font-size: 11px; color: var(--text3); margin-bottom: 8px; text-transform: uppercase; letter-spacing: .5px; }
-.stat-value { font-size: 22px; font-weight: 600; color: var(--text); }
-.stat-sub { font-size: 11px; color: var(--text3); margin-top: 4px; }
-.stat-delta { font-size: 11px; margin-top: 4px; }
-.stat-delta.up { color: var(--green); }
-.stat-delta.down { color: var(--red); }
-
-.section-title { font-size: 13px; font-weight: 500; color: var(--text2); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
-.section-title span { flex: 1; }
-.section-title a { font-size: 12px; color: var(--accent2); cursor: pointer; }
-
-/* ACTIVITY */
-.activity-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 20px; }
-.activity-item {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: 8px; padding: 10px 14px;
-  display: flex; align-items: center; gap: 10px;
-}
-.act-icon {
-  width: 28px; height: 28px; border-radius: 7px;
-  display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0;
-}
-.act-content { flex: 1; min-width: 0; }
-.act-title { font-size: 13px; color: var(--text); }
-.act-sub { font-size: 11px; color: var(--text3); margin-top: 2px; }
-.act-time { font-size: 11px; color: var(--text3); flex-shrink: 0; }
-
-/* APPROVALS */
-.approval-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
-.approval-card {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: 8px; padding: 14px;
-}
-.appr-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-.appr-icon { font-size: 16px; }
-.appr-title { font-size: 13px; font-weight: 500; }
-.appr-agent { font-size: 11px; color: var(--text3); margin-bottom: 10px; }
-.appr-actions { display: flex; gap: 6px; }
-.appr-btn {
-  flex: 1; padding: 5px 0; border-radius: 5px; font-size: 11px;
-  border: 1px solid var(--border2); background: none; color: var(--text2);
-  cursor: pointer; font-family: 'Inter', sans-serif; transition: all .15s; text-align: center;
-}
-.appr-btn.approve { border-color: var(--green); color: var(--green); }
-.appr-btn.approve:hover { background: rgba(0,206,201,.1); }
-.appr-btn.reject { border-color: var(--red); color: var(--red); }
-.appr-btn.reject:hover { background: rgba(225,112,85,.1); }
-
-/* TWO COL */
-.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
-
-/* AGENT GRID */
-.agent-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-.agent-card {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: 10px; padding: 16px; cursor: pointer; transition: all .2s;
-}
-.agent-card:hover { border-color: var(--accent); background: rgba(108,92,231,.04); }
-.agent-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-.agent-emoji {
-  width: 36px; height: 36px; border-radius: 9px;
-  display: flex; align-items: center; justify-content: center; font-size: 18px;
-}
-.agent-card-name { font-size: 13px; font-weight: 500; }
-.agent-card-dept { font-size: 11px; color: var(--text3); margin-top: 1px; }
-.agent-online { width: 7px; height: 7px; border-radius: 50%; background: var(--green); margin-left: auto; }
-.agent-tags { display: flex; flex-wrap: wrap; gap: 4px; }
-.agent-tag {
-  font-size: 10px; padding: 2px 7px; border-radius: 4px;
-}
-
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.topbar{height:48px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:16px;flex-shrink:0;}
+.topbar-title{font-size:14px;font-weight:500;flex:1;}
+.tba-btn{padding:5px 12px;border-radius:6px;font-size:12px;border:1px solid var(--border2);background:var(--surface2);color:var(--text2);cursor:pointer;transition:all .15s;font-family:'Inter',sans-serif;}
+.tba-btn:hover{color:var(--text);}
+.tba-btn.primary{background:var(--accent);border-color:var(--accent);color:white;}
+.tba-btn.primary:hover{opacity:.85;}
+/* SECTIONS */
+.section{display:none;flex:1;overflow:hidden;flex-direction:column;}
+.section.active{display:flex;}
+/* STAT CARDS */
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.stat-label{font-size:11px;color:var(--text3);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;}
+.stat-value{font-size:22px;font-weight:600;}
+.stat-sub{font-size:11px;color:var(--text3);margin-top:4px;}
+/* CHART CARD */
+.chart-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.chart-title{font-size:12px;font-weight:500;color:var(--text2);margin-bottom:4px;}
+.bar-row{display:flex;align-items:center;gap:8px;margin-top:6px;}
+.bar-label{font-size:11px;color:var(--text3);width:90px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.bar-track{flex:1;height:5px;background:var(--surface2);border-radius:3px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:3px;background:var(--accent);}
+.bar-val{font-size:11px;color:var(--text2);width:36px;text-align:right;flex-shrink:0;}
+/* AGENT CARDS */
+.agent-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.agent-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;cursor:pointer;transition:all .2s;}
+.agent-card:hover{border-color:var(--accent);background:rgba(108,92,231,.04);}
+.agent-emoji{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.agent-tag{padding:2px 7px;border-radius:4px;font-size:10px;display:inline-block;margin:2px;}
 /* AGENT DETAIL */
-.agent-detail { display: none; flex: 1; flex-direction: column; overflow: hidden; }
-.agent-detail.visible { display: flex; }
-.agent-detail-header {
-  padding: 20px 24px; border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; gap: 14px; flex-shrink: 0;
-}
-.adh-back {
-  padding: 5px 10px; border-radius: 6px; border: 1px solid var(--border2);
-  background: none; color: var(--text2); cursor: pointer; font-size: 12px;
-  font-family: 'Inter', sans-serif; transition: all .15s;
-}
-.adh-back:hover { color: var(--text); }
-.adh-avatar {
-  width: 44px; height: 44px; border-radius: 11px;
-  display: flex; align-items: center; justify-content: center; font-size: 22px;
-}
-.adh-name { font-size: 17px; font-weight: 600; }
-.adh-meta { font-size: 12px; color: var(--text3); margin-top: 2px; }
-.adh-actions { margin-left: auto; display: flex; gap: 8px; }
-
-.agent-detail-body {
-  display: grid; grid-template-columns: 1fr 300px;
-  flex: 1; overflow: hidden;
-}
-.agent-chat { display: flex; flex-direction: column; border-right: 1px solid var(--border); overflow: hidden; }
-.agent-chat-tabs {
-  display: flex; gap: 0; border-bottom: 1px solid var(--border); flex-shrink: 0;
-}
-.chat-tab {
-  padding: 10px 16px; font-size: 12px; color: var(--text3);
-  cursor: pointer; border-bottom: 2px solid transparent; transition: all .15s;
-}
-.chat-tab:hover { color: var(--text2); }
-.chat-tab.active { color: var(--accent2); border-bottom-color: var(--accent); }
-.chat-messages {
-  flex: 1; overflow-y: auto; padding: 20px;
-  display: flex; flex-direction: column; gap: 10px;
-}
-.chat-empty { text-align: center; color: var(--text3); font-size: 13px; margin: auto; }
-.msg {
-  background: var(--surface2); border: 1px solid var(--border);
-  border-radius: 8px; padding: 12px 14px;
-}
-.msg-meta { font-size: 11px; color: var(--text3); margin-bottom: 6px; font-family: 'Inter', sans-serif; }
-.msg-task { font-size: 11px; color: var(--accent2); margin-bottom: 4px; }
-.msg-body { font-size: 12px; line-height: 1.7; color: var(--text2); white-space: pre-wrap; word-wrap: break-word; font-family: 'JetBrains Mono', monospace; }
-.chat-input-area {
-  padding: 14px 16px; border-top: 1px solid var(--border); display: flex; gap: 8px; flex-shrink: 0;
-}
-.chat-input-area textarea {
-  flex: 1; background: var(--surface2); border: 1px solid var(--border2);
-  border-radius: 8px; padding: 9px 12px; font-family: 'Inter', sans-serif;
-  font-size: 13px; color: var(--text); resize: none; outline: none; height: 56px;
-}
-.chat-input-area textarea:focus { border-color: var(--accent); }
-
-/* AGENT INFO PANEL */
-.agent-info-panel { padding: 18px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
-.info-section-title {
-  font-size: 10px; font-weight: 600; color: var(--text3);
-  text-transform: uppercase; letter-spacing: .8px; margin-bottom: 8px;
-}
-.info-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 12px; }
-.info-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 12px; }
-.info-key { color: var(--text3); }
-.info-val { color: var(--text); font-weight: 500; }
-.tag { padding: 3px 8px; border-radius: 4px; font-size: 10px; display: inline-block; margin: 2px; }
-
-/* ANALYTICS */
-.analytics-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
-.chart-card {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: 10px; padding: 16px;
-}
-.chart-title { font-size: 12px; color: var(--text2); margin-bottom: 12px; font-weight: 500; }
-.chart-big { font-size: 28px; font-weight: 700; color: var(--text); }
-.chart-sub { font-size: 11px; color: var(--text3); margin-top: 4px; }
-.bar-chart { margin-top: 12px; display: flex; flex-direction: column; gap: 6px; }
-.bar-row { display: flex; align-items: center; gap: 8px; }
-.bar-label { font-size: 11px; color: var(--text3); width: 100px; flex-shrink: 0; }
-.bar-track { flex: 1; height: 6px; background: var(--surface2); border-radius: 3px; overflow: hidden; }
-.bar-fill { height: 100%; border-radius: 3px; background: var(--accent); }
-.bar-val { font-size: 11px; color: var(--text2); width: 40px; text-align: right; flex-shrink: 0; }
-
-/* CMD PALETTE */
-#cmd-palette {
-  position: fixed; inset: 0; background: rgba(0,0,0,.7);
-  display: none; align-items: flex-start; justify-content: center;
-  padding-top: 120px; z-index: 1000;
-}
-#cmd-palette.open { display: flex; }
-.cmd-box {
-  width: 540px; background: var(--surface2); border: 1px solid var(--border2);
-  border-radius: 12px; overflow: hidden;
-}
-.cmd-input {
-  width: 100%; padding: 14px 16px; background: none; border: none;
-  border-bottom: 1px solid var(--border); font-size: 14px;
-  color: var(--text); outline: none; font-family: 'Inter', sans-serif;
-}
-.cmd-results { max-height: 300px; overflow-y: auto; }
-.cmd-item {
-  padding: 10px 16px; display: flex; align-items: center; gap: 10px;
-  cursor: pointer; transition: background .1s; font-size: 13px;
-}
-.cmd-item:hover, .cmd-item.selected { background: var(--surface3); }
-.cmd-item-icon { font-size: 16px; width: 24px; text-align: center; }
-.cmd-item-name { flex: 1; }
-.cmd-item-kbd { font-size: 10px; color: var(--text3); font-family: 'JetBrains Mono', monospace; }
-
-/* OUTPUT AREA - Studio page */
-.studio-output { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
-.output-card {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: 10px; overflow: hidden;
-}
-.output-card-header {
-  padding: 10px 14px; display: flex; align-items: center; gap: 8px;
-  cursor: pointer; border-bottom: 1px solid var(--border);
-}
-.output-card-header:hover { background: rgba(255,255,255,.02); }
-.output-card-avatar { width: 26px; height: 26px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 13px; }
-.output-card-name { font-size: 13px; font-weight: 500; flex: 1; }
-.output-card-badge {
-  font-size: 10px; padding: 2px 7px; border-radius: 10px;
-  background: rgba(0,206,201,.1); color: var(--green); border: 1px solid rgba(0,206,201,.2);
-}
-.output-card-toggle { font-size: 11px; color: var(--text3); }
-.output-card-body {
-  padding: 14px; font-size: 12px; line-height: 1.8;
-  color: var(--text2); font-family: 'JetBrains Mono', monospace;
-  white-space: pre-wrap; word-wrap: break-word; max-height: 500px; overflow-y: auto;
-}
-.output-card-body.collapsed { display: none; }
-
-.studio-bottom {
-  padding: 12px 20px; border-top: 1px solid var(--border);
-  background: var(--surface); display: flex; gap: 8px; align-items: center; flex-shrink: 0;
-}
-.studio-bottom input {
-  flex: 1; background: var(--surface2); border: 1px solid var(--border2);
-  border-radius: 8px; padding: 9px 14px; font-family: 'Inter', sans-serif;
-  font-size: 13px; color: var(--text); outline: none;
-}
-.studio-bottom input:focus { border-color: var(--accent); }
-.studio-bottom input::placeholder { color: var(--text3); }
-
-.welcome-studio {
-  display: flex; flex-direction: column; align-items: center;
-  justify-content: center; flex: 1; gap: 10px; color: var(--text3);
-}
-.welcome-studio-icon { font-size: 40px; }
-.welcome-studio-title { font-size: 16px; font-weight: 500; color: var(--text2); }
-.welcome-studio-sub { font-size: 13px; }
-.welcome-cmds { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; justify-content: center; }
-.welcome-cmd {
-  padding: 6px 14px; border-radius: 6px; font-size: 12px;
-  font-family: 'JetBrains Mono', monospace; cursor: pointer;
-  border: 1px solid var(--border2); background: var(--surface2); color: var(--accent2);
-  transition: all .15s;
-}
-.welcome-cmd:hover { border-color: var(--accent); }
-
-/* SCROLLBAR */
-::-webkit-scrollbar { width: 4px; height: 4px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 4px; }
-
+.agent-detail{display:none;flex:1;flex-direction:column;overflow:hidden;}
+.agent-detail.visible{display:flex;}
+.adh{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-shrink:0;}
+.adh-avatar{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;}
+.adh-name{font-size:16px;font-weight:600;}
+.adh-meta{font-size:11px;color:var(--text3);margin-top:2px;}
+.agent-body{display:grid;grid-template-columns:1fr 280px;flex:1;overflow:hidden;}
+.agent-chat{display:flex;flex-direction:column;border-right:1px solid var(--border);overflow:hidden;}
+.chat-tabs{display:flex;border-bottom:1px solid var(--border);flex-shrink:0;}
+.chat-tab{padding:9px 14px;font-size:12px;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;}
+.chat-tab:hover{color:var(--text2);}
+.chat-tab.active{color:var(--accent2);border-bottom-color:var(--accent);}
+.chat-msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:8px;}
+.chat-empty{text-align:center;color:var(--text3);font-size:13px;margin:auto;}
+.msg{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;}
+.msg-task{font-size:11px;color:var(--accent2);margin-bottom:3px;}
+.msg-meta{font-size:10px;color:var(--text3);margin-bottom:5px;}
+.msg-body{font-size:12px;line-height:1.7;color:var(--text2);white-space:pre-wrap;word-wrap:break-word;font-family:'JetBrains Mono',monospace;}
+.chat-input-area{padding:12px 14px;border-top:1px solid var(--border);display:flex;gap:8px;flex-shrink:0;}
+.chat-input-area textarea{flex:1;background:var(--surface2);border:1px solid var(--border2);border-radius:7px;padding:8px 11px;font-family:'Inter',sans-serif;font-size:13px;color:var(--text);resize:none;outline:none;height:52px;}
+.chat-input-area textarea:focus{border-color:var(--accent);}
+/* INFO PANEL */
+.info-panel{padding:16px;overflow-y:auto;display:flex;flex-direction:column;gap:14px;}
+.info-title{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:7px;}
+.info-card{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:11px;}
+.info-row{display:flex;justify-content:space-between;padding:4px 0;font-size:12px;}
+.info-key{color:var(--text3);}
+.info-val{color:var(--text);font-weight:500;}
+/* STUDIO AI */
+.studio-ai{display:none;flex:1;flex-direction:column;overflow:hidden;}
+.studio-ai.visible{display:flex;}
+/* OUTPUT */
+.output-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:10px;}
+.oc-header{padding:10px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;border-bottom:1px solid var(--border);}
+.oc-header:hover{background:rgba(255,255,255,.02);}
+.oc-avatar{width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px;}
+.oc-name{font-size:13px;font-weight:500;flex:1;}
+.oc-badge{font-size:10px;padding:2px 7px;border-radius:10px;background:rgba(0,206,201,.1);color:var(--green);border:1px solid rgba(0,206,201,.2);}
+.oc-toggle{font-size:11px;color:var(--text3);}
+.oc-body{padding:14px;font-size:12px;line-height:1.8;color:var(--text2);font-family:'JetBrains Mono',monospace;white-space:pre-wrap;word-wrap:break-word;max-height:500px;overflow-y:auto;}
+.oc-body.collapsed{display:none;}
+/* STUDIO BOTTOM */
+.studio-bottom{padding:11px 20px;border-top:1px solid var(--border);background:var(--surface);display:flex;gap:8px;align-items:center;flex-shrink:0;}
+.studio-bottom input{flex:1;background:var(--surface2);border:1px solid var(--border2);border-radius:8px;padding:8px 13px;font-family:'Inter',sans-serif;font-size:13px;color:var(--text);outline:none;}
+.studio-bottom input:focus{border-color:var(--accent);}
+.studio-bottom input::placeholder{color:var(--text3);}
 /* LOADING */
-.loading-state { display: flex; align-items: center; gap: 10px; padding: 20px; color: var(--text3); font-size: 13px; }
-.spinner { width: 14px; height: 14px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin .8s linear infinite; }
-@keyframes spin { to { transform: rotate(360deg); } }
+.loading-state{display:flex;align-items:center;gap:10px;padding:20px;color:var(--text3);font-size:13px;}
+.spinner{width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+/* CMD PALETTE */
+#cmd-palette{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:flex-start;justify-content:center;padding-top:120px;z-index:1000;}
+#cmd-palette.open{display:flex;}
+.cmd-box{width:540px;background:var(--surface2);border:1px solid var(--border2);border-radius:12px;overflow:hidden;}
+.cmd-input{width:100%;padding:14px 16px;background:none;border:none;border-bottom:1px solid var(--border);font-size:14px;color:var(--text);outline:none;font-family:'Inter',sans-serif;}
+.cmd-results{max-height:300px;overflow-y:auto;}
+.cmd-item{padding:10px 16px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:background .1s;font-size:13px;}
+.cmd-item:hover{background:var(--surface3);}
+.cmd-item-icon{font-size:16px;width:24px;text-align:center;}
+/* PHASE MODAL */
+#phase-modal{position:fixed;inset:0;background:rgba(0,0,0,.75);display:none;align-items:center;justify-content:center;z-index:800;}
+#phase-modal.open{display:flex;}
+.phase-box{width:700px;max-height:85vh;background:var(--surface);border:1px solid var(--border2);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;}
+.phase-box-header{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.phase-box-header h2{font-size:16px;font-weight:600;flex:1;}
+.phase-box-body{flex:1;overflow-y:auto;padding:22px;}
+.phase-row{display:flex;gap:16px;margin-bottom:16px;}
+.phase-item{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;cursor:pointer;transition:all .2s;}
+.phase-item:hover{border-color:var(--accent);}
+.phase-item.done{border-color:var(--green);}
+.phase-item.active{border-color:var(--accent);background:rgba(108,92,231,.08);}
+.phase-item-header{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.phase-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.phase-name{font-size:13px;font-weight:500;}
+.phase-status{font-size:10px;margin-left:auto;padding:2px 7px;border-radius:10px;}
+.phase-pct{font-size:22px;font-weight:700;margin-bottom:4px;}
+.phase-bar{height:5px;background:var(--surface3);border-radius:3px;margin-bottom:8px;}
+.phase-bar-fill{height:100%;border-radius:3px;}
+.phase-tasks{font-size:11px;color:var(--text3);}
+/* SETTINGS */
+.settings-section{margin-bottom:24px;}
+.settings-title{font-size:13px;font-weight:600;color:var(--text2);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+.settings-row{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+.settings-label{font-size:13px;color:var(--text2);width:160px;flex-shrink:0;}
+.settings-input{flex:1;background:var(--surface2);border:1px solid var(--border2);border-radius:7px;padding:8px 12px;font-size:13px;color:var(--text);outline:none;font-family:'Inter',sans-serif;}
+.settings-input:focus{border-color:var(--accent);}
+.settings-select{flex:1;background:var(--surface2);border:1px solid var(--border2);border-radius:7px;padding:8px 12px;font-size:13px;color:var(--text);outline:none;font-family:'Inter',sans-serif;}
+.save-btn{background:var(--accent);border:none;border-radius:8px;padding:9px 20px;font-size:13px;color:white;cursor:pointer;font-family:'Inter',sans-serif;font-weight:500;}
+.save-btn:hover{opacity:.85;}
+/* SCROLLBAR */
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--surface3);border-radius:4px;}
 </style>
 </head>
 <body>
@@ -415,103 +184,104 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-ser
 <!-- APP -->
 <div id="app" style="display:none;">
 
-  <!-- LEFT NAV ICONS -->
+  <!-- LEFT NAV -->
   <div class="leftnav">
     <div class="nav-logo">🎮</div>
-    <div class="nav-icon active" id="ni-studio" onclick="switchSection('studio')">
-      🏠<span class="tooltip">Studio</span>
-    </div>
-    <div class="nav-icon" id="ni-agents" onclick="switchSection('agents')">
-      🤖<span class="tooltip">Agents</span>
-    </div>
-    <div class="nav-icon" id="ni-analytics" onclick="switchSection('analytics')">
-      📊<span class="tooltip">Analytics</span>
-    </div>
+    <div class="nav-icon active" id="ni-studio" onclick="goSection('studio')">🏠<span class="tip">Studio</span></div>
+    <div class="nav-icon" id="ni-agents" onclick="goSection('agents')">🤖<span class="tip">Agents</span></div>
+    <div class="nav-icon" id="ni-analytics" onclick="goSection('analytics')">📊<span class="tip">Analytics</span></div>
     <div class="nav-sep"></div>
-    <div class="nav-icon" id="ni-settings" onclick="switchSection('settings')">
-      ⚙️<span class="tooltip">Settings</span>
-    </div>
+    <div class="nav-icon" id="ni-settings" onclick="goSection('settings')">⚙️<span class="tip">Settings</span></div>
     <div class="nav-bottom">
-      <div class="nav-icon" onclick="openCmd()">
-        🔍<span class="tooltip">Command Palette ⌘K</span>
-      </div>
+      <div class="nav-icon" onclick="openCmd()">🔍<span class="tip">⌘K</span></div>
     </div>
   </div>
 
   <!-- SIDEBAR -->
-  <div class="sidebar" id="sidebar">
-    <!-- filled by JS -->
-  </div>
+  <div class="sidebar" id="sidebar"></div>
 
   <!-- MAIN -->
   <div class="main">
     <div class="topbar">
       <div class="topbar-title" id="topbar-title">Studio</div>
-      <div class="topbar-pills" id="topbar-pills"></div>
-      <div class="topbar-actions" id="topbar-actions"></div>
+      <div id="topbar-right" style="display:flex;gap:8px;align-items:center;"></div>
     </div>
 
-    <!-- STUDIO SECTION -->
-    <div id="section-studio" style="display:flex;flex-direction:column;flex:1;overflow:hidden;">
-
+    <!-- STUDIO -->
+    <div class="section active" id="section-studio">
       <!-- DASHBOARD -->
       <div id="studio-home" style="flex:1;overflow-y:auto;padding:20px 24px;">
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
           <div style="flex:1;">
-            <div style="font-size:18px;font-weight:600;">Throne Runners: Together</div>
-            <div style="font-size:12px;color:var(--text3);margin-top:2px;">Build Phase &middot; Week 2 of 6 &middot; <span style="color:var(--green)">&#9679; Active</span></div>
+            <div id="dash-project-name" style="font-size:18px;font-weight:600;">Throne Runners: Together</div>
+            <div id="dash-project-meta" style="font-size:12px;color:var(--text3);margin-top:2px;"></div>
           </div>
-          <button class="tba-btn" onclick="runCmd('/build')">Build &#9889;</button>
-          <button class="tba-btn primary" onclick="openCmd()">&#8984;K Command</button>
+          <button class="tba-btn" onclick="runCmd('/build')">Build ⚡</button>
+          <button class="tba-btn primary" onclick="openCmd()">⌘K</button>
         </div>
 
+        <!-- STATS -->
         <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:20px;">
           <div class="stat-card"><div class="stat-label">API Spend</div><div class="stat-value" style="font-size:20px;">$<span id="dash-spend">0.00</span></div><div class="stat-sub">Est. session</div></div>
           <div class="stat-card"><div class="stat-label">Commands</div><div class="stat-value" style="font-size:20px;" id="dash-cmds">0</div><div class="stat-sub">All time</div></div>
           <div class="stat-card"><div class="stat-label">Tokens</div><div class="stat-value" style="font-size:20px;" id="dash-tokens">0</div><div class="stat-sub">Est. total</div></div>
           <div class="stat-card"><div class="stat-label">Agents</div><div class="stat-value" style="font-size:20px;">13</div><div class="stat-sub">Online</div></div>
-          <div class="stat-card"><div class="stat-label">Progress</div><div class="stat-value" style="font-size:20px;">33%</div><div style="margin-top:6px;height:4px;background:var(--surface2);border-radius:2px;"><div style="width:33%;height:100%;background:var(--accent);border-radius:2px;"></div></div></div>
+          <div class="stat-card" style="cursor:pointer;" onclick="openPhaseModal()">
+            <div class="stat-label">Progress</div>
+            <div class="stat-value" style="font-size:20px;" id="dash-progress">0%</div>
+            <div style="margin-top:6px;height:4px;background:var(--surface2);border-radius:2px;"><div id="dash-progress-bar" style="height:100%;background:var(--accent);border-radius:2px;width:0%;"></div></div>
+            <div class="stat-sub" style="margin-top:4px;">Click to manage →</div>
+          </div>
         </div>
 
+        <!-- MAIN GRID -->
         <div style="display:grid;grid-template-columns:1fr 300px;gap:16px;margin-bottom:16px;">
+          <!-- ACTIVITY -->
           <div class="chart-card">
-            <div class="chart-title" style="display:flex;align-items:center;"><span style="flex:1;">Recent Activity</span><span style="font-size:11px;color:var(--accent2);cursor:pointer;" onclick="switchSection('analytics')">View all &rarr;</span></div>
-            <div id="dash-activity" style="display:flex;flex-direction:column;gap:6px;margin-top:8px;"><div style="font-size:12px;color:var(--text3);padding:8px 0;text-align:center;">No activity yet. Run a command.</div></div>
-          </div>
-          <div style="display:flex;flex-direction:column;gap:10px;">
-            <div class="chart-card">
-              <div class="chart-title">Project Phases</div>
-              <div style="display:flex;flex-direction:column;gap:6px;margin-top:8px;">
-                <div style="display:flex;align-items:center;gap:8px;font-size:12px;"><span style="width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0;"></span><span style="flex:1;color:var(--text);">Concept</span><span style="color:var(--green);font-size:10px;">Done</span></div>
-                <div style="display:flex;align-items:center;gap:8px;font-size:12px;"><span style="width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0;"></span><span style="flex:1;color:var(--text);">Design</span><span style="color:var(--green);font-size:10px;">Done</span></div>
-                <div style="display:flex;align-items:center;gap:8px;font-size:12px;"><span style="width:8px;height:8px;border-radius:50%;background:var(--accent);flex-shrink:0;animation:pulse 2s infinite;"></span><span style="flex:1;color:var(--text);font-weight:500;">Build</span><span style="color:var(--accent2);font-size:10px;">Active</span></div>
-                <div style="display:flex;align-items:center;gap:8px;font-size:12px;"><span style="width:8px;height:8px;border-radius:50%;background:var(--surface3);flex-shrink:0;"></span><span style="flex:1;color:var(--text3);">QA</span><span style="color:var(--text3);font-size:10px;">Pending</span></div>
-                <div style="display:flex;align-items:center;gap:8px;font-size:12px;"><span style="width:8px;height:8px;border-radius:50%;background:var(--surface3);flex-shrink:0;"></span><span style="flex:1;color:var(--text3);">Launch</span><span style="color:var(--text3);font-size:10px;">Pending</span></div>
-              </div>
+            <div style="display:flex;align-items:center;margin-bottom:10px;">
+              <span class="chart-title" style="flex:1;">Recent Activity</span>
+              <span style="font-size:11px;color:var(--accent2);cursor:pointer;" onclick="goSection('analytics')">View all →</span>
             </div>
+            <div id="dash-activity"><div style="font-size:12px;color:var(--text3);padding:8px 0;text-align:center;">No activity yet.</div></div>
+          </div>
+
+          <!-- RIGHT -->
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <!-- PHASES -->
+            <div class="chart-card" style="cursor:pointer;" onclick="openPhaseModal()">
+              <div class="chart-title" style="margin-bottom:10px;">Project Timeline <span style="font-size:10px;color:var(--accent2);">Edit →</span></div>
+              <div id="dash-phases-mini"></div>
+            </div>
+            <!-- AGENT LOAD -->
             <div class="chart-card">
-              <div class="chart-title">Most Used Agents</div>
-              <div id="dash-agent-load" style="display:flex;flex-direction:column;gap:5px;margin-top:8px;"><div style="font-size:12px;color:var(--text3);">No data yet.</div></div>
+              <div class="chart-title" style="margin-bottom:4px;">Most Used Agents</div>
+              <div id="dash-agent-load"><div style="font-size:12px;color:var(--text3);margin-top:8px;">No data yet.</div></div>
             </div>
           </div>
         </div>
 
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+        <!-- BOTTOM GRID -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <!-- LAST OUTPUT -->
           <div class="chart-card">
-            <div class="chart-title" style="display:flex;align-items:center;"><span style="flex:1;">Last Output</span><span id="dash-last-cmd" style="font-size:11px;color:var(--accent2);cursor:pointer;" onclick="showFullOutput()"></span></div>
-            <div id="dash-last-output" style="margin-top:8px;font-size:12px;color:var(--text2);line-height:1.6;max-height:160px;overflow:hidden;font-family:'JetBrains Mono',monospace;"><div style="color:var(--text3);">No output yet.</div></div>
+            <div style="display:flex;align-items:center;margin-bottom:8px;">
+              <span class="chart-title" style="flex:1;">Last Output</span>
+              <span id="dash-last-cmd-btn" style="font-size:11px;color:var(--accent2);cursor:pointer;" onclick="showFullOutput()"></span>
+            </div>
+            <div id="dash-last-output" style="font-size:12px;color:var(--text2);line-height:1.6;max-height:150px;overflow:hidden;font-family:'JetBrains Mono',monospace;"><div style="color:var(--text3);">No output yet.</div></div>
           </div>
+          <!-- QUICK ACTIONS -->
           <div class="chart-card">
-            <div class="chart-title">Quick Actions</div>
-            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;">
-              <button class="tba-btn" style="font-size:12px;" onclick="runCmd('/new-game')">&#10022; New Concept</button>
-              <button class="tba-btn" style="font-size:12px;" onclick="runCmd('/game-design-doc')">&#128203; GDD</button>
-              <button class="tba-btn" style="font-size:12px;" onclick="runCmd('/build')">&#9889; Build</button>
-              <button class="tba-btn" style="font-size:12px;" onclick="runCmd('/playtest')">&#127918; Playtest</button>
-              <button class="tba-btn" style="font-size:12px;" onclick="runCmd('/steam-page')">&#128640; Steam</button>
-              <button class="tba-btn" style="font-size:12px;" onclick="runCmd('/launch-plan')">&#128197; Launch</button>
-              <button class="tba-btn" style="font-size:12px;" onclick="switchSection('agents')">&#129302; Agents</button>
-              <button class="tba-btn" style="font-size:12px;" onclick="switchSection('analytics')">&#128202; Analytics</button>
+            <div class="chart-title" style="margin-bottom:10px;">Quick Actions</div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;">
+              <button class="tba-btn" style="font-size:11px;" onclick="runCmd('/new-game')">✦ New Concept</button>
+              <button class="tba-btn" style="font-size:11px;" onclick="runCmd('/game-design-doc')">📋 GDD</button>
+              <button class="tba-btn" style="font-size:11px;" onclick="runCmd('/build')">⚡ Build</button>
+              <button class="tba-btn" style="font-size:11px;" onclick="runCmd('/playtest')">🎮 Playtest</button>
+              <button class="tba-btn" style="font-size:11px;" onclick="runCmd('/steam-page')">🚀 Steam</button>
+              <button class="tba-btn" style="font-size:11px;" onclick="runCmd('/launch-plan')">📅 Launch</button>
+              <button class="tba-btn" style="font-size:11px;" onclick="goSection('agents')">🤖 Agents</button>
+              <button class="tba-btn" style="font-size:11px;" onclick="goSection('analytics')">📊 Analytics</button>
             </div>
           </div>
         </div>
@@ -520,54 +290,62 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-ser
       <!-- OUTPUT VIEW -->
       <div id="studio-output-view" style="display:none;flex:1;flex-direction:column;overflow:hidden;">
         <div style="padding:10px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0;">
-          <button class="tba-btn" onclick="showDashboard()">&#8592; Dashboard</button>
+          <button class="tba-btn" onclick="showDashboard()">← Dashboard</button>
           <span id="output-view-title" style="font-size:13px;font-weight:500;flex:1;"></span>
-          <button class="tba-btn" onclick="downloadOutput()">Export &#8595;</button>
+          <button class="tba-btn" onclick="exportOutput()">Export ↓</button>
         </div>
-        <div class="studio-output" id="studio-output"></div>
+        <div style="flex:1;overflow-y:auto;padding:20px;" id="studio-output"></div>
         <div class="studio-bottom">
           <input type="text" id="ctx-input" placeholder="Add context (optional)..." />
-          <button class="tba-btn primary" onclick="runFromCtx()">Run Again &#8599;</button>
+          <button class="tba-btn primary" onclick="runFromCtx()">Run Again ↗</button>
         </div>
       </div>
-
     </div>
 
-    <!-- AGENTS SECTION -->
-    <div id="section-agents" style="display:none;flex:1;overflow:hidden;flex-direction:column;">
+    <!-- AGENTS -->
+    <div class="section" id="section-agents">
+      <!-- LIST -->
       <div id="agent-list-view" style="flex:1;overflow-y:auto;padding:20px;">
-        <div class="agent-grid" id="agent-grid"></div>
-      </div>
-      <div class="agent-detail" id="agent-detail">
-        <div class="agent-detail-header">
-          <button class="adh-back" onclick="closeAgentDetail()">← Back</button>
-          <div class="adh-avatar" id="adh-avatar"></div>
-          <div>
-            <div class="adh-name" id="adh-name"></div>
-            <div class="adh-meta" id="adh-meta"></div>
+        <!-- Studio AI Chat -->
+        <div class="chart-card" style="margin-bottom:16px;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+            <div style="width:36px;height:36px;border-radius:9px;background:rgba(108,92,231,.15);color:var(--accent2);display:flex;align-items:center;justify-content:center;font-size:18px;">🧠</div>
+            <div>
+              <div style="font-size:14px;font-weight:600;">Studio AI</div>
+              <div style="font-size:11px;color:var(--text3);">General assistant — ask anything about your project</div>
+            </div>
           </div>
-          <div class="adh-actions">
-            <button class="tba-btn primary" onclick="runAgentTask()">Run Task ↗</button>
+          <div id="studio-ai-msgs" style="max-height:200px;overflow-y:auto;display:flex;flex-direction:column;gap:6px;margin-bottom:10px;">
+            <div style="font-size:12px;color:var(--text3);text-align:center;padding:8px;">Ask me anything about Throne Runners: Together</div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <input type="text" id="studio-ai-input" placeholder="Ask Studio AI..." style="flex:1;background:var(--surface2);border:1px solid var(--border2);border-radius:7px;padding:8px 11px;font-size:13px;color:var(--text);outline:none;font-family:'Inter',sans-serif;">
+            <button class="tba-btn primary" onclick="askStudioAI()">Ask</button>
           </div>
         </div>
-        <div class="agent-detail-body">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:10px;text-transform:uppercase;letter-spacing:.8px;font-weight:600;">Agents</div>
+        <div class="agent-grid" id="agent-grid"></div>
+      </div>
+      <!-- DETAIL -->
+      <div class="agent-detail" id="agent-detail">
+        <div class="adh">
+          <button class="tba-btn" onclick="closeAgentDetail()">← Back</button>
+          <div class="adh-avatar" id="adh-avatar"></div>
+          <div><div class="adh-name" id="adh-name"></div><div class="adh-meta" id="adh-meta"></div></div>
+          <div style="margin-left:auto;"><button class="tba-btn primary" onclick="runAgentTask()">Run Task ↗</button></div>
+        </div>
+        <div class="agent-body">
           <div class="agent-chat">
-            <div class="agent-chat-tabs">
-              <div class="chat-tab active">Chat</div>
-              <div class="chat-tab">Artifacts</div>
-              <div class="chat-tab">History</div>
-            </div>
-            <div class="chat-messages" id="agent-messages">
-              <div class="chat-empty">No output yet. Give this agent a task.</div>
-            </div>
+            <div class="chat-tabs"><div class="chat-tab active">Chat</div><div class="chat-tab">Artifacts</div><div class="chat-tab">History</div></div>
+            <div class="chat-msgs" id="agent-msgs"><div class="chat-empty">No output yet.</div></div>
             <div class="chat-input-area">
-              <textarea id="agent-task-input" placeholder="Give this agent a specific task..."></textarea>
-              <button class="tba-btn primary" onclick="runAgentTask()" style="height:56px;padding:0 14px;">Run</button>
+              <textarea id="agent-task-input" placeholder="Give this agent a task..."></textarea>
+              <button class="tba-btn primary" onclick="runAgentTask()" style="height:52px;padding:0 12px;">Run</button>
             </div>
           </div>
-          <div class="agent-info-panel">
+          <div class="info-panel">
             <div>
-              <div class="info-section-title">Agent Info</div>
+              <div class="info-title">Agent Info</div>
               <div class="info-card">
                 <div class="info-row"><span class="info-key">Department</span><span class="info-val" id="ai-dept">—</span></div>
                 <div class="info-row"><span class="info-key">Status</span><span class="info-val" style="color:var(--green)">● Online</span></div>
@@ -575,83 +353,133 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-ser
                 <div class="info-row"><span class="info-key">Tasks run</span><span class="info-val" id="ai-tasks">0</span></div>
               </div>
             </div>
-            <div>
-              <div class="info-section-title">Responsibilities</div>
-              <div id="ai-resp"></div>
-            </div>
-            <div>
-              <div class="info-section-title">Handoffs To</div>
-              <div id="ai-handoffs"></div>
-            </div>
+            <div><div class="info-title">Responsibilities</div><div id="ai-resp"></div></div>
+            <div><div class="info-title">Handoffs To</div><div id="ai-handoffs"></div></div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- ANALYTICS SECTION -->
-    <div id="section-analytics" style="display:none;flex:1;overflow-y:auto;padding:24px;">
-      <div class="stat-grid">
-        <div class="stat-card">
-          <div class="stat-label">Total API Spend</div>
-          <div class="stat-value">$<span id="an-spend">0.00</span></div>
-          <div class="stat-sub">This session</div>
+    <!-- ANALYTICS -->
+    <div class="section" id="section-analytics" style="overflow-y:auto;">
+      <div style="padding:24px;">
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px;">
+          <div class="stat-card"><div class="stat-label">Total Spend</div><div class="stat-value">$<span id="an-spend">0.00</span></div><div class="stat-sub">Estimated</div></div>
+          <div class="stat-card"><div class="stat-label">Total Tokens</div><div class="stat-value" id="an-tokens">0</div><div class="stat-sub">Input + Output</div></div>
+          <div class="stat-card"><div class="stat-label">Commands Run</div><div class="stat-value" id="an-cmds">0</div><div class="stat-sub">All time</div></div>
+          <div class="stat-card"><div class="stat-label">Agents Used</div><div class="stat-value" id="an-agents">0</div><div class="stat-sub">Unique</div></div>
         </div>
-        <div class="stat-card">
-          <div class="stat-label">Total Tokens</div>
-          <div class="stat-value" id="an-tokens">0</div>
-          <div class="stat-sub">Input + Output</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Commands Run</div>
-          <div class="stat-value" id="an-cmds">0</div>
-          <div class="stat-sub">All time</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Agents Used</div>
-          <div class="stat-value" id="an-agents">0</div>
-          <div class="stat-sub">Unique agents</div>
-        </div>
-      </div>
-      <div class="two-col">
-        <div class="chart-card">
-          <div class="chart-title">Spend by Agent</div>
-          <div class="bar-chart" id="an-by-agent"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+          <div class="chart-card"><div class="chart-title">Spend by Agent</div><div id="an-by-agent" style="margin-top:4px;"></div></div>
+          <div class="chart-card"><div class="chart-title">Commands by Type</div><div id="an-by-cmd" style="margin-top:4px;"></div></div>
         </div>
         <div class="chart-card">
-          <div class="chart-title">Commands by Type</div>
-          <div class="bar-chart" id="an-by-cmd"></div>
+          <div class="chart-title">Activity Log</div>
+          <div id="an-log" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text2);line-height:1.8;max-height:200px;overflow-y:auto;margin-top:8px;"></div>
         </div>
-      </div>
-      <div class="chart-card" style="margin-bottom:16px;">
-        <div class="chart-title">Recent Activity Log</div>
-        <div id="an-log" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text2);line-height:1.8;max-height:200px;overflow-y:auto;"></div>
       </div>
     </div>
 
-    <!-- SETTINGS SECTION -->
-    <div id="section-settings" style="display:none;flex:1;overflow-y:auto;padding:24px;">
-      <div class="chart-card">
-        <div class="chart-title">Studio Settings</div>
-        <div style="font-size:13px;color:var(--text2);margin-top:8px;">Settings panel — coming soon.</div>
+    <!-- SETTINGS -->
+    <div class="section" id="section-settings" style="overflow-y:auto;">
+      <div style="padding:24px;max-width:680px;">
+
+        <div class="settings-section">
+          <div class="settings-title">Project Info</div>
+          <div class="settings-row">
+            <span class="settings-label">Project Name</span>
+            <input class="settings-input" id="set-name" value="Throne Runners: Together" />
+          </div>
+          <div class="settings-row">
+            <span class="settings-label">Description</span>
+            <input class="settings-input" id="set-desc" value="2-4 player co-op medieval throne carrying game" />
+          </div>
+          <div class="settings-row">
+            <span class="settings-label">Studio Name</span>
+            <input class="settings-input" id="set-studio" value="Kivo Studios" />
+          </div>
+          <div class="settings-row">
+            <span class="settings-label">Target Platform</span>
+            <input class="settings-input" id="set-platform" value="Steam PC" />
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <div class="settings-title">Timeline</div>
+          <div class="settings-row">
+            <span class="settings-label">Current Week</span>
+            <input class="settings-input" id="set-week" type="number" value="2" min="1" />
+          </div>
+          <div class="settings-row">
+            <span class="settings-label">Total Weeks</span>
+            <input class="settings-input" id="set-total-weeks" type="number" value="6" min="1" />
+          </div>
+          <div class="settings-row">
+            <span class="settings-label">Active Phase</span>
+            <select class="settings-select" id="set-active-phase">
+              <option value="0">Concept</option>
+              <option value="1">Design</option>
+              <option value="2" selected>Build</option>
+              <option value="3">QA</option>
+              <option value="4">Launch</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <div class="settings-title">Phase Progress (%)</div>
+          <div id="settings-phases"></div>
+        </div>
+
+        <div class="settings-section">
+          <div class="settings-title">Context</div>
+          <div class="settings-row">
+            <span class="settings-label">Default AI Context</span>
+            <textarea class="settings-input" id="set-context" rows="3" style="height:auto;resize:vertical;">Throne Runners: Together — 2-4 player co-op medieval game, throne carrying mechanic, physics-based, skeleton and knight enemies, low poly cartoon style, Steam PC</textarea>
+          </div>
+        </div>
+
+        <button class="save-btn" onclick="saveSettings()">Save Settings</button>
+        <span id="save-feedback" style="font-size:12px;color:var(--green);margin-left:12px;display:none;">Saved ✓</span>
       </div>
     </div>
+
   </div>
 </div>
 
 <!-- COMMAND PALETTE -->
 <div id="cmd-palette">
   <div class="cmd-box">
-    <input class="cmd-input" id="cmd-input" placeholder="Type a command..." oninput="filterCmds(this.value)" />
+    <input class="cmd-input" id="cmd-input" placeholder="Type a command or search..." oninput="filterCmds(this.value)" />
     <div class="cmd-results" id="cmd-results"></div>
   </div>
 </div>
 
+<!-- PHASE MODAL -->
+<div id="phase-modal">
+  <div class="phase-box">
+    <div class="phase-box-header">
+      <h2>Project Timeline & Progress</h2>
+      <button class="tba-btn" onclick="closePhaseModal()">Close ✕</button>
+    </div>
+    <div class="phase-box-body" id="phase-modal-body"></div>
+  </div>
+</div>
+
 <script>
-// ── DATA ──────────────────────────────────────────────────────────────────
+// ── CONSTANTS ─────────────────────────────────────────────────────────────
+const PHASE_DEFS = [
+  {name:'Concept',color:'#00cec9'},
+  {name:'Design',color:'#a29bfe'},
+  {name:'Build',color:'#6c5ce7'},
+  {name:'QA',color:'#fdcb6e'},
+  {name:'Launch',color:'#e17055'},
+];
+
 const AGENTS = [
   {id:'creativedirector',name:'Creative Director',dept:'Design',emoji:'🎨',model:'Claude Opus',resp:['Game concepts','Creative vision','Art direction','Final approval'],handoffs:['Game Designer','Producer']},
   {id:'gamedesigner',name:'Game Designer',dept:'Design',emoji:'🎲',model:'Claude Sonnet',resp:['Core loop','Mechanics','GDD writing','Player journey'],handoffs:['System Designer','Level Designer']},
-  {id:'systemdesigner',name:'System Designer',dept:'Design',emoji:'⚙️',model:'GPT-4o',resp:['Balance','Numbers','Economy','Difficulty curve'],handoffs:['Gameplay Developer']},
+  {id:'systemdesigner',name:'System Designer',dept:'Design',emoji:'⚙️',model:'GPT-4o',resp:['Balance','Numbers','Economy','Difficulty'],handoffs:['Gameplay Developer']},
   {id:'leveldesigner',name:'Level Designer',dept:'Design',emoji:'🗺️',model:'Claude Sonnet',resp:['Maps','Level flow','Checkpoints','Pacing'],handoffs:['Gameplay Developer']},
   {id:'technicaldirector',name:'Technical Director',dept:'Tech',emoji:'🔧',model:'GPT-4o',resp:['Architecture','Tech decisions','Code standards'],handoffs:['Gameplay Developer','Tools Engineer']},
   {id:'gameplaydeveloper',name:'Gameplay Developer',dept:'Tech',emoji:'💻',model:'GPT-4o',resp:['C# scripts','Unity','Physics','AI systems'],handoffs:['QA Lead']},
@@ -661,11 +489,11 @@ const AGENTS = [
   {id:'marketinglead',name:'Marketing Lead',dept:'Business',emoji:'📣',model:'Claude Sonnet',resp:['Strategy','Audience','Messaging','Campaigns'],handoffs:['Content Creator']},
   {id:'contentcreator',name:'Content Creator',dept:'Business',emoji:'✍️',model:'Claude Sonnet',resp:['Devlogs','Social posts','Trailers','Press kit'],handoffs:['Steam Manager']},
   {id:'steammanager',name:'Steam Manager',dept:'Business',emoji:'🚀',model:'Claude Sonnet',resp:['Store page','Tags','Pricing','Launch'],handoffs:['Founder']},
-  {id:'analyticsspecialist',name:'Analytics Specialist',dept:'Data',emoji:'📊',model:'GPT-4o',resp:['Playtest data','Retention','Metrics','Reports'],handoffs:['Producer','Founder']},
+  {id:'analyticsspecialist',name:'Analytics Specialist',dept:'Data',emoji:'📊',model:'GPT-4o',resp:['Data analysis','Metrics','Reports','KPIs'],handoffs:['Producer','Founder']},
 ];
 
 const DC = {
-  Design:  {bg:'rgba(108,92,231,.15)',color:'#a29bfe'},
+  Design:  {bg:'rgba(162,155,254,.15)',color:'#a29bfe'},
   Tech:    {bg:'rgba(0,206,201,.12)',color:'#00cec9'},
   Quality: {bg:'rgba(253,203,110,.12)',color:'#fdcb6e'},
   Business:{bg:'rgba(225,112,85,.12)',color:'#e17055'},
@@ -673,442 +501,572 @@ const DC = {
 };
 
 const COMMANDS = [
-  {id:'/new-game',label:'New Game',icon:'✦',desc:'Generate game concepts'},
-  {id:'/game-design-doc',label:'Game Design Doc',icon:'📋',desc:'Full GDD generation'},
-  {id:'/build',label:'Build',icon:'⚡',desc:'Generate Unity scripts'},
-  {id:'/playtest',label:'Playtest',icon:'🎮',desc:'QA and analytics'},
-  {id:'/steam-page',label:'Steam Page',icon:'🚀',desc:'Store page content'},
-  {id:'/launch-plan',label:'Launch Plan',icon:'📅',desc:'Full launch strategy'},
+  {id:'/new-game',label:'New Game',icon:'✦'},
+  {id:'/game-design-doc',label:'Game Design Doc',icon:'📋'},
+  {id:'/build',label:'Build',icon:'⚡'},
+  {id:'/playtest',label:'Playtest',icon:'🎮'},
+  {id:'/steam-page',label:'Steam Page',icon:'🚀'},
+  {id:'/launch-plan',label:'Launch Plan',icon:'📅'},
 ];
 
 // ── STATE ─────────────────────────────────────────────────────────────────
-let history = JSON.parse(localStorage.getItem('kivo_history') || '[]');
-let agentMsgs = JSON.parse(localStorage.getItem('kivo_agent_msgs') || '{}');
-let agentTaskCounts = JSON.parse(localStorage.getItem('kivo_agent_tasks') || '{}');
-let analyticsLog = JSON.parse(localStorage.getItem('kivo_analytics') || '[]');
+let cmdHistory = JSON.parse(localStorage.getItem('kivo_history')||'[]');
+let agentMsgs = JSON.parse(localStorage.getItem('kivo_agent_msgs')||'{}');
+let agentTaskCounts = JSON.parse(localStorage.getItem('kivo_agent_tasks')||'{}');
+let analyticsLog = JSON.parse(localStorage.getItem('kivo_analytics')||'[]');
+let settings = JSON.parse(localStorage.getItem('kivo_settings')||'{}');
+let phases = JSON.parse(localStorage.getItem('kivo_phases')||JSON.stringify([100,100,33,0,0]));
 let currentSection = 'studio';
 let currentCmd = null;
 let selectedAgent = null;
 let lastOutput = '';
+let studioAiMsgs = [];
+
+// ── DEFAULT SETTINGS ──────────────────────────────────────────────────────
+const DEF = {
+  name: 'Throne Runners: Together',
+  desc: '2-4 player co-op medieval throne carrying game',
+  studio: 'Kivo Studios',
+  platform: 'Steam PC',
+  week: 2,
+  totalWeeks: 6,
+  activePhase: 2,
+  context: 'Throne Runners: Together — 2-4 player co-op medieval game, throne carrying mechanic, physics-based, skeleton and knight enemies, low poly cartoon style, Steam PC',
+};
+function S(key) { return settings[key] !== undefined ? settings[key] : DEF[key]; }
 
 // ── AUTH ──────────────────────────────────────────────────────────────────
 async function doLogin() {
   const pw = document.getElementById('pw').value;
   try {
-    const res = await fetch('/auth', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pw})});
+    const res = await fetch('/auth',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pw})});
     const d = await res.json();
-    if (d.ok) { localStorage.setItem('kivo_auth','1'); bootApp(); }
-    else { document.getElementById('pw-err').style.display = 'block'; }
-  } catch(e) { document.getElementById('pw-err').style.display = 'block'; }
+    if (d.ok) { localStorage.setItem('kivo_auth','1'); boot(); }
+    else { document.getElementById('pw-err').style.display='block'; }
+  } catch(e) { document.getElementById('pw-err').style.display='block'; }
 }
-document.getElementById('pw').addEventListener('keypress', e => { if(e.key==='Enter') doLogin(); });
+document.getElementById('pw').addEventListener('keypress',e=>{if(e.key==='Enter')doLogin();});
 
-function bootApp() {
-  document.getElementById('login').style.display = 'none';
-  document.getElementById('app').style.display = 'flex';
+function boot() {
+  document.getElementById('login').style.display='none';
+  document.getElementById('app').style.display='flex';
+  applySettings();
   renderSidebar();
   renderAgentGrid();
+  updateDashboard();
   updateAnalytics();
-  if (history.length > 0) renderOutput(history[0].results);
+  initSettingsForm();
+}
+if (localStorage.getItem('kivo_auth')==='1') boot();
+
+// ── SETTINGS ──────────────────────────────────────────────────────────────
+function applySettings() {
+  document.getElementById('dash-project-name').textContent = S('name');
+  const week = S('week'), total = S('totalWeeks'), ap = S('activePhase');
+  const phaseName = PHASE_DEFS[ap]?.name || 'Build';
+  document.getElementById('dash-project-meta').textContent = phaseName+' Phase · Week '+week+' of '+total+' · ● Active';
+  document.title = S('studio')+' — '+S('name');
 }
 
-if (localStorage.getItem('kivo_auth') === '1') bootApp();
+function initSettingsForm() {
+  document.getElementById('set-name').value = S('name');
+  document.getElementById('set-desc').value = S('desc');
+  document.getElementById('set-studio').value = S('studio');
+  document.getElementById('set-platform').value = S('platform');
+  document.getElementById('set-week').value = S('week');
+  document.getElementById('set-total-weeks').value = S('totalWeeks');
+  document.getElementById('set-active-phase').value = S('activePhase');
+  document.getElementById('set-context').value = S('context');
 
-// ── SIDEBAR ───────────────────────────────────────────────────────────────
-function renderSidebar() {
-  const s = document.getElementById('sidebar');
-  if (currentSection === 'studio') {
-    s.innerHTML = `
-      <div class="sidebar-header">Workflows</div>
-      ${COMMANDS.map(c => `
-        <div class="sidebar-item ${currentCmd===c.id?'active':''}" onclick="runCmd('${c.id}')">
-          <span class="si-icon">${c.icon}</span> ${c.label}
-        </div>
-      `).join('')}
-      <div class="sidebar-sep"></div>
-      <div class="sidebar-header">History</div>
-      ${history.slice(0,8).map((h,i) => `
-        <div class="sidebar-item ${i===0?'active':''}" onclick="loadHistory(${i})">
-          <span class="si-icon">🕐</span>
-          <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${h.cmd}</span>
-          <span style="font-size:10px;color:var(--text3)">${h.time}</span>
-        </div>
-      `).join('')}
-    `;
-  } else if (currentSection === 'agents') {
-    const depts = [...new Set(AGENTS.map(a=>a.dept))];
-    s.innerHTML = depts.map(dept => `
-      <div class="sidebar-header">${dept}</div>
-      ${AGENTS.filter(a=>a.dept===dept).map(a => `
-        <div class="sidebar-item" onclick="openAgent('${a.id}')">
-          <span class="si-icon">${a.emoji}</span> ${a.name}
-        </div>
-      `).join('')}
-    `).join('<div class="sidebar-sep"></div>');
-  } else if (currentSection === 'analytics') {
-    s.innerHTML = `
-      <div class="sidebar-header">Analytics</div>
-      <div class="sidebar-item active"><span class="si-icon">💰</span> Cost & Spend</div>
-      <div class="sidebar-item"><span class="si-icon">📈</span> Token Usage</div>
-      <div class="sidebar-item"><span class="si-icon">⚡</span> Performance</div>
-      <div class="sidebar-item"><span class="si-icon">🔔</span> Alerts</div>
-    `;
-  } else {
-    s.innerHTML = `
-      <div class="sidebar-header">Settings</div>
-      <div class="sidebar-item active"><span class="si-icon">🔑</span> API Keys</div>
-      <div class="sidebar-item"><span class="si-icon">🤖</span> Models</div>
-      <div class="sidebar-item"><span class="si-icon">🔔</span> Notifications</div>
-    `;
-  }
+  const phasesEl = document.getElementById('settings-phases');
+  phasesEl.innerHTML = PHASE_DEFS.map((p,i)=>`
+    <div class="settings-row">
+      <span class="settings-label" style="display:flex;align-items:center;gap:6px;">
+        <span style="width:8px;height:8px;border-radius:50%;background:${p.color};flex-shrink:0;"></span>${p.name}
+      </span>
+      <input class="settings-input" type="range" min="0" max="100" value="${phases[i]}" id="phase-pct-${i}" oninput="document.getElementById('phase-pct-val-${i}').textContent=this.value+'%'" style="padding:0;height:36px;">
+      <span id="phase-pct-val-${i}" style="width:36px;text-align:right;font-size:12px;color:var(--text2);">${phases[i]}%</span>
+    </div>
+  `).join('');
 }
 
-// ── SECTION SWITCH ────────────────────────────────────────────────────────
-function switchSection(s) {
+function saveSettings() {
+  settings.name = document.getElementById('set-name').value;
+  settings.desc = document.getElementById('set-desc').value;
+  settings.studio = document.getElementById('set-studio').value;
+  settings.platform = document.getElementById('set-platform').value;
+  settings.week = parseInt(document.getElementById('set-week').value)||1;
+  settings.totalWeeks = parseInt(document.getElementById('set-total-weeks').value)||6;
+  settings.activePhase = parseInt(document.getElementById('set-active-phase').value)||0;
+  settings.context = document.getElementById('set-context').value;
+  phases = PHASE_DEFS.map((_,i)=>parseInt(document.getElementById('phase-pct-'+i)?.value||0));
+  localStorage.setItem('kivo_settings',JSON.stringify(settings));
+  localStorage.setItem('kivo_phases',JSON.stringify(phases));
+  applySettings();
+  updateDashboard();
+  const fb = document.getElementById('save-feedback');
+  fb.style.display='inline';
+  setTimeout(()=>fb.style.display='none',2000);
+}
+
+// ── SECTION ───────────────────────────────────────────────────────────────
+function goSection(s) {
   currentSection = s;
-  ['studio','agents','analytics','settings'].forEach(sec => {
-    document.getElementById('section-'+sec).style.display = sec===s ? 'flex' : 'none';
-  });
-  ['studio','agents','analytics','settings'].forEach(sec => {
-    const el = document.getElementById('ni-'+sec);
-    if (el) el.classList.toggle('active', sec===s);
-  });
+  document.querySelectorAll('.section').forEach(el=>el.classList.remove('active'));
+  document.getElementById('section-'+s).classList.add('active');
+  document.querySelectorAll('.nav-icon[id^="ni-"]').forEach(el=>el.classList.remove('active'));
+  const ni = document.getElementById('ni-'+s);
+  if (ni) ni.classList.add('active');
   document.getElementById('topbar-title').textContent = s.charAt(0).toUpperCase()+s.slice(1);
   renderSidebar();
   if (s==='analytics') updateAnalytics();
 }
 
-// ── AGENT GRID ────────────────────────────────────────────────────────────
-function renderAgentGrid() {
-  const g = document.getElementById('agent-grid');
-  g.innerHTML = AGENTS.map(a => {
-    const col = DC[a.dept];
-    return `
-      <div class="agent-card" onclick="openAgent('${a.id}')">
-        <div class="agent-card-header">
-          <div class="agent-emoji" style="background:${col.bg};color:${col.color}">${a.emoji}</div>
-          <div>
-            <div class="agent-card-name">${a.name}</div>
-            <div class="agent-card-dept">${a.dept} · ${a.model}</div>
-          </div>
-          <div class="agent-online"></div>
+// ── SIDEBAR ───────────────────────────────────────────────────────────────
+function renderSidebar() {
+  const s = document.getElementById('sidebar');
+  if (currentSection==='studio') {
+    s.innerHTML = '<div class="sidebar-header">History</div>'
+      + (cmdHistory.length===0 ? '<div style="padding:8px 16px;font-size:12px;color:var(--text3);">No history yet.</div>' : '')
+      + cmdHistory.slice(0,10).map((h,i)=>`
+        <div class="sidebar-item ${i===0?'active':''}" onclick="loadHistory(${i})">
+          <span class="si-icon">🕐</span>
+          <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;">${h.cmd}</span>
+          <span style="font-size:10px;color:var(--text3);">${h.time}</span>
         </div>
-        <div class="agent-tags">
-          ${a.resp.slice(0,2).map(r=>`<span class="agent-tag" style="background:${col.bg};color:${col.color}">${r}</span>`).join('')}
+      `).join('');
+  } else if (currentSection==='agents') {
+    const depts = [...new Set(AGENTS.map(a=>a.dept))];
+    s.innerHTML = depts.map((dept,di)=>`
+      ${di>0?'<div class="sidebar-sep"></div>':''}
+      <div class="sidebar-header">${dept}</div>
+      ${AGENTS.filter(a=>a.dept===dept).map(a=>`
+        <div class="sidebar-item" onclick="openAgent('${a.id}')">
+          <span class="si-icon">${a.emoji}</span>${a.name}
         </div>
-      </div>
+      `).join('')}
+    `).join('');
+  } else if (currentSection==='analytics') {
+    s.innerHTML = `
+      <div class="sidebar-header">Analytics</div>
+      <div class="sidebar-item active"><span class="si-icon">💰</span>Cost & Spend</div>
+      <div class="sidebar-item"><span class="si-icon">📈</span>Token Usage</div>
+      <div class="sidebar-item"><span class="si-icon">⚡</span>Performance</div>
     `;
-  }).join('');
+  } else {
+    s.innerHTML = `
+      <div class="sidebar-header">Settings</div>
+      <div class="sidebar-item active"><span class="si-icon">🎮</span>Project</div>
+      <div class="sidebar-item"><span class="si-icon">📅</span>Timeline</div>
+      <div class="sidebar-item"><span class="si-icon">🤖</span>Models</div>
+      <div class="sidebar-item"><span class="si-icon">🔑</span>API Keys</div>
+    `;
+  }
 }
 
-function openAgent(id) {
-  const a = AGENTS.find(x=>x.id===id);
-  if (!a) return;
-  selectedAgent = a;
-  const col = DC[a.dept];
-  document.getElementById('agent-list-view').style.display = 'none';
-  const det = document.getElementById('agent-detail');
-  det.classList.add('visible');
-  const av = document.getElementById('adh-avatar');
-  av.style.cssText = `width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:22px;background:${col.bg};color:${col.color};`;
-  av.textContent = a.emoji;
-  document.getElementById('adh-name').textContent = a.name;
-  document.getElementById('adh-meta').textContent = a.dept + ' · ' + a.model;
-  document.getElementById('ai-dept').textContent = a.dept;
-  document.getElementById('ai-model').textContent = a.model;
-  document.getElementById('ai-tasks').textContent = agentTaskCounts[a.id] || 0;
-  document.getElementById('ai-resp').innerHTML = a.resp.map(r=>`<span class="tag" style="background:${col.bg};color:${col.color}">${r}</span>`).join('');
-  document.getElementById('ai-handoffs').innerHTML = a.handoffs.map(h=>`<span class="tag" style="background:var(--surface2);color:var(--text2);border:1px solid var(--border2)">${h}</span>`).join('');
-  renderAgentMessages(a);
-  switchSection('agents');
+// ── DASHBOARD ─────────────────────────────────────────────────────────────
+function updateDashboard() {
+  const totalSize = analyticsLog.reduce((a,l)=>a+l.size,0);
+  const estTokens = Math.round(totalSize/4);
+  const estCost = (estTokens*0.000003).toFixed(4);
+  const spEl=document.getElementById('dash-spend');
+  const tkEl=document.getElementById('dash-tokens');
+  const cmEl=document.getElementById('dash-cmds');
+  if(spEl)spEl.textContent=estCost;
+  if(tkEl)tkEl.textContent=estTokens.toLocaleString();
+  if(cmEl)cmEl.textContent=cmdHistory.length;
+
+  // progress
+  const ap = S('activePhase');
+  const totalPct = Math.round(phases.reduce((a,b)=>a+b,0)/phases.length);
+  const progEl=document.getElementById('dash-progress');
+  const barEl=document.getElementById('dash-progress-bar');
+  if(progEl)progEl.textContent=totalPct+'%';
+  if(barEl)barEl.style.width=totalPct+'%';
+
+  // phases mini
+  const phEl=document.getElementById('dash-phases-mini');
+  if(phEl) phEl.innerHTML = PHASE_DEFS.map((p,i)=>`
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:7px;">
+      <span style="width:8px;height:8px;border-radius:50%;background:${phases[i]===100?'var(--green)':i===ap?p.color:'var(--surface3)'};flex-shrink:0;${i===ap?'animation:pulse 2s infinite;':''}"></span>
+      <span style="flex:1;font-size:12px;color:${i<=ap?'var(--text)':'var(--text3)'};">${p.name}</span>
+      <span style="font-size:10px;color:${phases[i]===100?'var(--green)':i===ap?'var(--accent2)':'var(--text3)'};">${phases[i]}%</span>
+    </div>
+    <div style="height:3px;background:var(--surface2);border-radius:2px;margin-bottom:7px;margin-left:16px;">
+      <div style="width:${phases[i]}%;height:100%;background:${phases[i]===100?'var(--green)':i===ap?p.color:'var(--surface3)'};border-radius:2px;transition:width .3s;"></div>
+    </div>
+  `).join('');
+
+  // activity
+  const actEl=document.getElementById('dash-activity');
+  if(actEl) {
+    if(analyticsLog.length===0) {
+      actEl.innerHTML='<div style="font-size:12px;color:var(--text3);padding:8px 0;text-align:center;">No activity yet.</div>';
+    } else {
+      actEl.innerHTML = analyticsLog.slice(-8).reverse().map(l=>{
+        const a=AGENTS.find(x=>x.id===l.id);
+        const icon=a?a.emoji:(l.type==='command'?'⚡':'🤖');
+        const name=a?a.name:l.id;
+        return `<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);">
+          <span style="font-size:14px;">${icon}</span>
+          <span style="flex:1;font-size:12px;color:var(--text);">${name}</span>
+          <span style="font-size:10px;color:var(--text3);">~${Math.round(l.size/4)} tok</span>
+        </div>`;
+      }).join('');
+    }
+  }
+
+  // agent load
+  const byAgent={};
+  analyticsLog.filter(l=>l.type==='agent-task').forEach(t=>{byAgent[t.id]=(byAgent[t.id]||0)+t.size;});
+  const alEl=document.getElementById('dash-agent-load');
+  if(alEl){
+    const entries=Object.entries(byAgent).sort((a,b)=>b[1]-a[1]).slice(0,5);
+    if(entries.length>0){
+      const max=entries[0][1];
+      alEl.innerHTML=entries.map(([id,size])=>{
+        const a=AGENTS.find(x=>x.id===id);
+        return `<div class="bar-row"><span class="bar-label">${a?a.emoji+' '+a.name.split(' ')[0]:id}</span><div class="bar-track"><div class="bar-fill" style="width:${Math.round(size/max*100)}%"></div></div><span class="bar-val">${Math.round(size/4)}tk</span></div>`;
+      }).join('');
+    } else {
+      alEl.innerHTML='<div style="font-size:12px;color:var(--text3);margin-top:8px;">No data yet.</div>';
+    }
+  }
+
+  // last output
+  const lcEl=document.getElementById('dash-last-cmd-btn');
+  const loEl=document.getElementById('dash-last-output');
+  if(cmdHistory.length>0&&lcEl&&loEl){
+    const h=cmdHistory[0];
+    lcEl.textContent=h.cmd+' — View ↗';
+    const preview=(h.results[0]&&h.results[0].output)?h.results[0].output.substring(0,280):'';
+    loEl.innerHTML='<div>'+preview+(preview.length>=280?'…':'')+'</div>';
+  }
 }
 
-function closeAgentDetail() {
-  document.getElementById('agent-list-view').style.display = 'block';
-  document.getElementById('agent-detail').classList.remove('visible');
-  selectedAgent = null;
-}
-
-function renderAgentMessages(a) {
-  const msgs = document.getElementById('agent-messages');
-  const list = agentMsgs[a.id] || [];
-  if (list.length === 0) { msgs.innerHTML = `<div class="chat-empty">${a.emoji}<br><br>No output yet.</div>`; return; }
-  msgs.innerHTML = '';
-  list.forEach(h => {
-    const el = document.createElement('div');
-    el.className = 'msg';
-    el.innerHTML = `<div class="msg-task">→ ${h.task}</div><div class="msg-meta">${a.emoji} ${a.name} · ${h.time}</div><div class="msg-body">${h.output}</div>`;
-    msgs.appendChild(el);
-  });
-  msgs.scrollTop = msgs.scrollHeight;
-}
-
-async function runAgentTask() {
-  if (!selectedAgent) return;
-  const task = document.getElementById('agent-task-input').value.trim();
-  if (!task) return;
-  const msgs = document.getElementById('agent-messages');
-  msgs.innerHTML = `<div class="loading-state"><div class="spinner"></div>${selectedAgent.name} working...</div>`;
-  try {
-    const res = await fetch('/agent-task', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({agentId:selectedAgent.id,task})});
-    const data = await res.json();
-    const output = data.output || 'No output';
-    agentTaskCounts[selectedAgent.id] = (agentTaskCounts[selectedAgent.id]||0)+1;
-    localStorage.setItem('kivo_agent_tasks', JSON.stringify(agentTaskCounts));
-    document.getElementById('ai-tasks').textContent = agentTaskCounts[selectedAgent.id];
-    if (!agentMsgs[selectedAgent.id]) agentMsgs[selectedAgent.id] = [];
-    agentMsgs[selectedAgent.id].push({task, output, time: ts()});
-    localStorage.setItem('kivo_agent_msgs', JSON.stringify(agentMsgs));
-    logAnalytics('agent-task', selectedAgent.id, output.length);
-    renderAgentMessages(selectedAgent);
-    document.getElementById('agent-task-input').value = '';
-  } catch(e) { msgs.innerHTML = `<div class="msg"><div class="msg-body">Connection error.</div></div>`; }
-}
-
-// ── STUDIO / RUN CMD ─────────────────────────────────────────────────────
 function showDashboard() {
-  document.getElementById('studio-home').style.display = 'block';
-  document.getElementById('studio-output-view').style.display = 'none';
+  document.getElementById('studio-home').style.display='block';
+  document.getElementById('studio-output-view').style.display='none';
   updateDashboard();
 }
 
 function showFullOutput() {
-  if (!lastOutput) return;
-  document.getElementById('studio-home').style.display = 'none';
-  document.getElementById('studio-output-view').style.display = 'flex';
+  if(!lastOutput)return;
+  document.getElementById('studio-home').style.display='none';
+  document.getElementById('studio-output-view').style.display='flex';
 }
 
-function updateDashboard() {
-  const totalSize = analyticsLog.reduce((a,l)=>a+l.size,0);
-  const estTokens = Math.round(totalSize/4);
-  const estCost = (estTokens * 0.000003).toFixed(4);
-  const spendEl = document.getElementById('dash-spend');
-  const tokensEl = document.getElementById('dash-tokens');
-  const cmdsEl = document.getElementById('dash-cmds');
-  if (spendEl) spendEl.textContent = estCost;
-  if (tokensEl) tokensEl.textContent = estTokens.toLocaleString();
-  if (cmdsEl) cmdsEl.textContent = history.length;
+// ── PHASE MODAL ───────────────────────────────────────────────────────────
+function openPhaseModal() {
+  const body=document.getElementById('phase-modal-body');
+  body.innerHTML=`
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:20px;">
+      ${PHASE_DEFS.map((p,i)=>{
+        const pct=phases[i];
+        const isDone=pct===100;
+        const isActive=i===S('activePhase');
+        return `<div class="phase-item ${isDone?'done':isActive?'active':''}" onclick="editPhase(${i})">
+          <div class="phase-item-header">
+            <span class="phase-dot" style="background:${isDone?'var(--green)':isActive?p.color:'var(--surface3)'}"></span>
+            <span class="phase-name">${p.name}</span>
+            <span class="phase-status" style="background:${isDone?'rgba(0,206,201,.1)':isActive?'rgba(108,92,231,.1)':'var(--surface3)'};color:${isDone?'var(--green)':isActive?'var(--accent2)':'var(--text3)'};">
+              ${isDone?'Done':isActive?'Active':'Pending'}
+            </span>
+          </div>
+          <div class="phase-pct" style="color:${isDone?'var(--green)':isActive?p.color:'var(--text3)'};">${pct}%</div>
+          <div class="phase-bar"><div class="phase-bar-fill" style="width:${pct}%;background:${isDone?'var(--green)':isActive?p.color:'var(--surface3)'}"></div></div>
+          <div class="phase-tasks" style="color:var(--text3);">Click to edit</div>
+        </div>`;
+      }).join('')}
+    </div>
 
-  const actEl = document.getElementById('dash-activity');
-  if (actEl && analyticsLog.length > 0) {
-    actEl.innerHTML = analyticsLog.slice(-6).reverse().map(l => {
-      const a = AGENTS.find(x=>x.id===l.id);
-      const icon = a ? a.emoji : (l.type==='command'?'&#9889;':'&#129302;');
-      const name = a ? a.name : l.id;
-      return '<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);">'
-        + '<span style="font-size:14px;">'+icon+'</span>'
-        + '<span style="flex:1;font-size:12px;color:var(--text);">'+name+'</span>'
-        + '<span style="font-size:10px;color:var(--text3);">~'+Math.round(l.size/4)+' tokens</span>'
-        + '</div>';
-    }).join('');
-  }
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:16px;">
+      <div style="font-size:13px;font-weight:500;margin-bottom:12px;">Edit Phase Progress</div>
+      ${PHASE_DEFS.map((p,i)=>`
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+          <span style="width:10px;height:10px;border-radius:50%;background:${p.color};flex-shrink:0;"></span>
+          <span style="width:70px;font-size:12px;color:var(--text2);">${p.name}</span>
+          <input type="range" min="0" max="100" value="${phases[i]}" id="modal-phase-${i}"
+            oninput="updateModalPhase(${i},this.value)"
+            style="flex:1;accent-color:${p.color};">
+          <span id="modal-phase-val-${i}" style="width:36px;text-align:right;font-size:12px;color:var(--text2);">${phases[i]}%</span>
+        </div>
+      `).join('')}
+      <div style="margin-top:12px;display:flex;gap:8px;">
+        <button class="save-btn" onclick="savePhaseModal()">Save Changes</button>
+        <button class="tba-btn" onclick="closePhaseModal()">Cancel</button>
+      </div>
+    </div>
 
-  const byAgent = {};
-  analyticsLog.filter(l=>l.type==='agent-task').forEach(t => { byAgent[t.id]=(byAgent[t.id]||0)+t.size; });
-  const agentLoadEl = document.getElementById('dash-agent-load');
-  if (agentLoadEl) {
-    const entries = Object.entries(byAgent).sort((a,b)=>b[1]-a[1]).slice(0,5);
-    if (entries.length > 0) {
-      const max = entries[0][1];
-      agentLoadEl.innerHTML = entries.map(function(e) {
-        const id=e[0],size=e[1];
-        const a = AGENTS.find(x=>x.id===id);
-        return '<div class="bar-row">'
-          + '<span class="bar-label" style="width:80px;">'+(a?a.emoji+' '+a.name.split(' ')[0]:id)+'</span>'
-          + '<div class="bar-track"><div class="bar-fill" style="width:'+Math.round(size/max*100)+'%"></div></div>'
-          + '<span class="bar-val">'+Math.round(size/4)+'tk</span>'
-          + '</div>';
-      }).join('');
-    } else {
-      agentLoadEl.innerHTML = '<div style="font-size:12px;color:var(--text3);">No data yet.</div>';
-    }
-  }
-
-  const lastCmdEl = document.getElementById('dash-last-cmd');
-  const lastOutEl = document.getElementById('dash-last-output');
-  if (history.length > 0 && lastCmdEl && lastOutEl) {
-    const h = history[0];
-    lastCmdEl.textContent = h.cmd + ' — View full';
-    const preview = (h.results[0]&&h.results[0].output) ? h.results[0].output.substring(0,300) : '';
-    lastOutEl.innerHTML = '<div>'+preview+(preview.length>=300?'&hellip;':'')+'</div>';
-  }
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:16px;">
+      <div style="font-size:13px;font-weight:500;margin-bottom:10px;">Timeline</div>
+      <div style="display:flex;gap:0;height:8px;border-radius:4px;overflow:hidden;">
+        ${PHASE_DEFS.map((p,i)=>`<div style="flex:1;background:${phases[i]>0?p.color:'var(--surface3)'};opacity:${0.3+phases[i]/100*0.7};"></div>`).join('')}
+      </div>
+      <div style="display:flex;margin-top:6px;">
+        ${PHASE_DEFS.map(p=>`<div style="flex:1;font-size:10px;color:var(--text3);text-align:center;">${p.name}</div>`).join('')}
+      </div>
+      <div style="margin-top:12px;font-size:12px;color:var(--text2);">
+        Week <strong>${S('week')}</strong> of <strong>${S('totalWeeks')}</strong> &nbsp;·&nbsp;
+        Active Phase: <strong style="color:var(--accent2);">${PHASE_DEFS[S('activePhase')]?.name}</strong> &nbsp;·&nbsp;
+        Overall: <strong>${Math.round(phases.reduce((a,b)=>a+b,0)/phases.length)}%</strong>
+      </div>
+    </div>
+  `;
+  document.getElementById('phase-modal').classList.add('open');
 }
 
-async function runCmd(command, context) {
-  currentCmd = command;
-  switchSection('studio');
-  document.getElementById('studio-home').style.display = 'none';
-  const ov = document.getElementById('studio-output-view');
-  ov.style.display = 'flex';
-  const titleEl = document.getElementById('output-view-title');
-  if (titleEl) titleEl.textContent = command;
-  const output = document.getElementById('studio-output');
-  output.innerHTML = '<div class="loading-state"><div class="spinner"></div>Running '+command+' &#8212; agents initializing...</div>';
+function updateModalPhase(i,val) {
+  document.getElementById('modal-phase-val-'+i).textContent=val+'%';
+}
+
+function savePhaseModal() {
+  phases=PHASE_DEFS.map((_,i)=>parseInt(document.getElementById('modal-phase-'+i)?.value||0));
+  localStorage.setItem('kivo_phases',JSON.stringify(phases));
+  // sync settings form sliders too
+  PHASE_DEFS.forEach((_,i)=>{
+    const el=document.getElementById('phase-pct-'+i);
+    if(el){el.value=phases[i];document.getElementById('phase-pct-val-'+i).textContent=phases[i]+'%';}
+  });
+  updateDashboard();
+  closePhaseModal();
+}
+
+function closePhaseModal() { document.getElementById('phase-modal').classList.remove('open'); }
+function editPhase(i) { document.getElementById('modal-phase-'+i)?.scrollIntoView({behavior:'smooth'}); }
+
+// ── RUN CMD ───────────────────────────────────────────────────────────────
+async function runCmd(command,context) {
+  currentCmd=command;
+  goSection('studio');
+  document.getElementById('studio-home').style.display='none';
+  document.getElementById('studio-output-view').style.display='flex';
+  const titleEl=document.getElementById('output-view-title');
+  if(titleEl)titleEl.textContent=command;
+  const output=document.getElementById('studio-output');
+  output.innerHTML='<div class="loading-state"><div class="spinner"></div>Running '+command+' — agents initializing...</div>';
   try {
-    const ctxInput = document.getElementById('ctx-input');
-    const ctx = context || (ctxInput?ctxInput.value:'') || 'Throne Runners: Together';
-    const res = await fetch('/command', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({command:command,context:ctx})});
-    const data = await res.json();
-    if (data.error) { output.innerHTML = '<div class="output-card"><div class="output-card-body">Error: '+data.error+'</div></div>'; return; }
-    history.unshift({cmd:command,results:data.results,time:ts(),id:Date.now()});
-    if (history.length>30) history=history.slice(0,30);
-    localStorage.setItem('kivo_history', JSON.stringify(history));
-    logAnalytics('command', command, data.results ? data.results.reduce(function(a,r){return a+r.output.length;},0) : 0);
+    const ctxInput=document.getElementById('ctx-input');
+    const ctx=context||(ctxInput?ctxInput.value:'')||S('context');
+    const res=await fetch('/command',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({command:command,context:ctx})});
+    const data=await res.json();
+    if(data.error){output.innerHTML='<div class="output-card"><div class="oc-body">Error: '+data.error+'</div></div>';return;}
+    cmdHistory.unshift({cmd:command,results:data.results,time:ts(),id:Date.now()});
+    if(cmdHistory.length>30)cmdHistory=cmdHistory.slice(0,30);
+    localStorage.setItem('kivo_history',JSON.stringify(cmdHistory));
+    logAnalytics('command',command,data.results?data.results.reduce(function(a,r){return a+r.output.length;},0):0);
     renderSidebar();
     renderOutput(data.results);
-    lastOutput = data.results.map(function(r){return '## '+r.agent+'\n\n'+r.output;}).join('\n\n---\n\n');
+    lastOutput=data.results.map(function(r){return '## '+r.agent+'\n\n'+r.output;}).join('\n\n---\n\n');
     updateDashboard();
-  } catch(e) { output.innerHTML = '<div class="output-card"><div class="output-card-body">Connection error.</div></div>'; }
+  } catch(e){output.innerHTML='<div class="output-card"><div class="oc-body">Connection error.</div></div>';}
 }
 
-function runFromCtx() {
-  const ctxInput = document.getElementById('ctx-input');
-  runCmd(currentCmd||'/new-game', ctxInput?ctxInput.value:'');
-}
+function runFromCtx(){const c=document.getElementById('ctx-input');runCmd(currentCmd||'/new-game',c?c.value:'');}
 
-function loadHistory(i) {
-  const h = history[i];
-  if (!h) return;
-  switchSection('studio');
-  document.getElementById('studio-home').style.display = 'none';
-  const ov = document.getElementById('studio-output-view');
-  ov.style.display = 'flex';
-  const titleEl = document.getElementById('output-view-title');
-  if (titleEl) titleEl.textContent = h.cmd + ' · ' + h.time;
+function loadHistory(i){
+  const h=cmdHistory[i];if(!h)return;
+  goSection('studio');
+  document.getElementById('studio-home').style.display='none';
+  document.getElementById('studio-output-view').style.display='flex';
+  const t=document.getElementById('output-view-title');if(t)t.textContent=h.cmd+' · '+h.time;
   renderOutput(h.results);
-  lastOutput = h.results.map(function(r){return '## '+r.agent+'\n\n'+r.output;}).join('\n\n---\n\n');
+  lastOutput=h.results.map(function(r){return '## '+r.agent+'\n\n'+r.output;}).join('\n\n---\n\n');
 }
 
-function renderOutput(results) {
-  const output = document.getElementById('studio-output');
-  output.innerHTML = '';
-  results.forEach(r => {
-    const a = AGENTS.find(x=>x.id===r.agent) || {emoji:'🤖',name:r.agent,dept:'Design'};
-    const col = DC[a.dept] || {bg:'rgba(108,92,231,.15)',color:'#a29bfe'};
-    const card = document.createElement('div');
-    card.className = 'output-card';
-    card.innerHTML = `
-      <div class="output-card-header" onclick="toggleOutputCard(this)">
-        <div class="output-card-avatar" style="background:${col.bg};color:${col.color}">${a.emoji}</div>
-        <span class="output-card-name">${a.name}</span>
-        <span class="output-card-badge">✓ done</span>
-        <span class="output-card-toggle">▼</span>
-      </div>
-      <div class="output-card-body">${r.output}</div>
-    `;
+function renderOutput(results){
+  const output=document.getElementById('studio-output');
+  output.innerHTML='';
+  results.forEach(function(r){
+    const a=AGENTS.find(x=>x.id===r.agent)||{emoji:'🤖',name:r.agent,dept:'Design'};
+    const col=DC[a.dept]||{bg:'rgba(162,155,254,.15)',color:'#a29bfe'};
+    const card=document.createElement('div');
+    card.className='output-card';
+    card.innerHTML='<div class="oc-header" onclick="toggleOC(this)"><div class="oc-avatar" style="background:'+col.bg+';color:'+col.color+'">'+a.emoji+'</div><span class="oc-name">'+a.name+'</span><span class="oc-badge">✓ done</span><span class="oc-toggle">▼</span></div><div class="oc-body">'+r.output+'</div>';
     output.appendChild(card);
   });
 }
 
-function toggleOutputCard(header) {
-  const body = header.nextElementSibling;
-  const icon = header.querySelector('.output-card-toggle');
-  body.classList.toggle('collapsed');
-  icon.textContent = body.classList.contains('collapsed') ? '▶' : '▼';
+function toggleOC(h){
+  const b=h.nextElementSibling,ic=h.querySelector('.oc-toggle');
+  b.classList.toggle('collapsed');
+  ic.textContent=b.classList.contains('collapsed')?'▶':'▼';
 }
 
-// ── ANALYTICS ────────────────────────────────────────────────────────────
-function logAnalytics(type, id, size) {
-  analyticsLog.push({type,id,size,time:Date.now()});
-  if (analyticsLog.length > 200) analyticsLog = analyticsLog.slice(-200);
-  localStorage.setItem('kivo_analytics', JSON.stringify(analyticsLog));
+function exportOutput(){
+  if(!lastOutput){alert('No output yet.');return;}
+  const b=new Blob([lastOutput],{type:'text/markdown'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(b);
+  a.download='kivo-output-'+Date.now()+'.md';
+  a.click();
 }
 
-function updateAnalytics() {
-  const cmds = analyticsLog.filter(l=>l.type==='command');
-  const tasks = analyticsLog.filter(l=>l.type==='agent-task');
-  const totalSize = analyticsLog.reduce((a,l)=>a+l.size,0);
-  const estTokens = Math.round(totalSize/4);
-  const estCost = (estTokens * 0.000003).toFixed(4);
-  document.getElementById('an-spend').textContent = estCost;
-  document.getElementById('an-tokens').textContent = estTokens.toLocaleString();
-  document.getElementById('an-cmds').textContent = history.length;
-  const usedAgents = [...new Set(analyticsLog.map(l=>l.id))].length;
-  document.getElementById('an-agents').textContent = usedAgents;
-
-  // by agent
-  const byAgent = {};
-  tasks.forEach(t => { byAgent[t.id] = (byAgent[t.id]||0)+t.size; });
-  const byAgentEl = document.getElementById('an-by-agent');
-  const maxA = Math.max(...Object.values(byAgent),1);
-  byAgentEl.innerHTML = Object.entries(byAgent).slice(0,6).map(([id,size])=>`
-    <div class="bar-row">
-      <span class="bar-label">${id.replace('developer','dev').replace('director','dir')}</span>
-      <div class="bar-track"><div class="bar-fill" style="width:${(size/maxA*100).toFixed(0)}%"></div></div>
-      <span class="bar-val">${Math.round(size/4)} tk</span>
-    </div>
-  `).join('') || '<div style="font-size:12px;color:var(--text3)">No data yet</div>';
-
-  // by cmd
-  const byCmd = {};
-  cmds.forEach(c => { byCmd[c.id] = (byCmd[c.id]||0)+1; });
-  const byCmdEl = document.getElementById('an-by-cmd');
-  const maxC = Math.max(...Object.values(byCmd),1);
-  byCmdEl.innerHTML = Object.entries(byCmd).map(([id,n])=>`
-    <div class="bar-row">
-      <span class="bar-label">${id}</span>
-      <div class="bar-track"><div class="bar-fill" style="width:${(n/maxC*100).toFixed(0)}%"></div></div>
-      <span class="bar-val">${n}x</span>
-    </div>
-  `).join('') || '<div style="font-size:12px;color:var(--text3)">No data yet</div>';
-
-  // log
-  const logEl = document.getElementById('an-log');
-  logEl.innerHTML = analyticsLog.slice(-20).reverse().map(l=>`
-    <div>[${new Date(l.time).toLocaleTimeString()}] ${l.type} — ${l.id} — ~${Math.round(l.size/4)} tokens</div>
-  `).join('') || 'No activity logged yet.';
+// ── AGENTS ────────────────────────────────────────────────────────────────
+function renderAgentGrid(){
+  const g=document.getElementById('agent-grid');
+  g.innerHTML=AGENTS.map(function(a){
+    const col=DC[a.dept];
+    return '<div class="agent-card" onclick="openAgent(\''+a.id+'\')">'
+      +'<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">'
+      +'<div class="agent-emoji" style="background:'+col.bg+';color:'+col.color+'">'+a.emoji+'</div>'
+      +'<div><div style="font-size:13px;font-weight:500;">'+a.name+'</div><div style="font-size:11px;color:var(--text3);">'+a.dept+' · '+a.model+'</div></div>'
+      +'<div style="margin-left:auto;width:7px;height:7px;border-radius:50%;background:var(--green);"></div>'
+      +'</div>'
+      +'<div>'+a.resp.slice(0,2).map(function(r){return '<span class="agent-tag" style="background:'+col.bg+';color:'+col.color+'">'+r+'</span>';}).join('')+'</div>'
+      +'</div>';
+  }).join('');
 }
 
-// ── COMMAND PALETTE ───────────────────────────────────────────────────────
-const allCmds = [
-  ...COMMANDS.map(c=>({icon:c.icon,name:c.label,desc:c.desc,action:()=>runCmd(c.id)})),
-  ...AGENTS.map(a=>({icon:a.emoji,name:a.name,desc:a.dept+' · '+a.model,action:()=>openAgent(a.id)})),
-  {icon:'📊',name:'Analytics',desc:'View usage and cost',action:()=>switchSection('analytics')},
-  {icon:'⚙️',name:'Settings',desc:'Studio settings',action:()=>switchSection('settings')},
+function openAgent(id){
+  const a=AGENTS.find(x=>x.id===id);if(!a)return;
+  selectedAgent=a;
+  const col=DC[a.dept];
+  document.getElementById('agent-list-view').style.display='none';
+  const det=document.getElementById('agent-detail');det.classList.add('visible');
+  const av=document.getElementById('adh-avatar');
+  av.style.cssText='width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;background:'+col.bg+';color:'+col.color+';';
+  av.textContent=a.emoji;
+  document.getElementById('adh-name').textContent=a.name;
+  document.getElementById('adh-meta').textContent=a.dept+' · '+a.model;
+  document.getElementById('ai-dept').textContent=a.dept;
+  document.getElementById('ai-model').textContent=a.model;
+  document.getElementById('ai-tasks').textContent=agentTaskCounts[a.id]||0;
+  document.getElementById('ai-resp').innerHTML=a.resp.map(r=>'<span class="agent-tag" style="background:'+col.bg+';color:'+col.color+'">'+r+'</span>').join('');
+  document.getElementById('ai-handoffs').innerHTML=a.handoffs.map(h=>'<span class="agent-tag" style="background:var(--surface2);color:var(--text2);border:1px solid var(--border2)">'+h+'</span>').join('');
+  renderAgentMsgs(a);
+}
+
+function closeAgentDetail(){
+  document.getElementById('agent-list-view').style.display='block';
+  document.getElementById('agent-detail').classList.remove('visible');
+  selectedAgent=null;
+}
+
+function renderAgentMsgs(a){
+  const msgs=document.getElementById('agent-msgs');
+  const list=agentMsgs[a.id]||[];
+  if(list.length===0){msgs.innerHTML='<div class="chat-empty">'+a.emoji+'<br><br>No output yet.</div>';return;}
+  msgs.innerHTML='';
+  list.forEach(function(h){
+    const el=document.createElement('div');el.className='msg';
+    el.innerHTML='<div class="msg-task">→ '+h.task+'</div><div class="msg-meta">'+a.emoji+' '+a.name+' · '+h.time+'</div><div class="msg-body">'+h.output+'</div>';
+    msgs.appendChild(el);
+  });
+  msgs.scrollTop=msgs.scrollHeight;
+}
+
+async function runAgentTask(){
+  if(!selectedAgent)return;
+  const task=document.getElementById('agent-task-input').value.trim();
+  if(!task)return;
+  const msgs=document.getElementById('agent-msgs');
+  msgs.innerHTML='<div class="loading-state"><div class="spinner"></div>'+selectedAgent.name+' working...</div>';
+  try{
+    const res=await fetch('/agent-task',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({agentId:selectedAgent.id,task:task})});
+    const data=await res.json();
+    const output=data.output||'No output';
+    agentTaskCounts[selectedAgent.id]=(agentTaskCounts[selectedAgent.id]||0)+1;
+    localStorage.setItem('kivo_agent_tasks',JSON.stringify(agentTaskCounts));
+    document.getElementById('ai-tasks').textContent=agentTaskCounts[selectedAgent.id];
+    if(!agentMsgs[selectedAgent.id])agentMsgs[selectedAgent.id]=[];
+    agentMsgs[selectedAgent.id].push({task:task,output:output,time:ts()});
+    localStorage.setItem('kivo_agent_msgs',JSON.stringify(agentMsgs));
+    logAnalytics('agent-task',selectedAgent.id,output.length);
+    renderAgentMsgs(selectedAgent);
+    document.getElementById('agent-task-input').value='';
+    updateDashboard();
+  }catch(e){msgs.innerHTML='<div class="msg"><div class="msg-body">Connection error.</div></div>';}
+}
+
+// ── STUDIO AI ─────────────────────────────────────────────────────────────
+async function askStudioAI(){
+  const input=document.getElementById('studio-ai-input');
+  const q=input.value.trim();if(!q)return;
+  const msgs=document.getElementById('studio-ai-msgs');
+  const userEl=document.createElement('div');
+  userEl.style.cssText='background:rgba(108,92,231,.1);border:1px solid rgba(108,92,231,.2);border-radius:7px;padding:8px 10px;font-size:12px;color:var(--text);margin-bottom:4px;';
+  userEl.textContent='You: '+q;
+  msgs.appendChild(userEl);
+  input.value='';
+  const loadEl=document.createElement('div');
+  loadEl.style.cssText='font-size:12px;color:var(--text3);padding:4px 0;';
+  loadEl.textContent='Studio AI thinking...';
+  msgs.appendChild(loadEl);
+  msgs.scrollTop=msgs.scrollHeight;
+  try{
+    const context='Project: '+S('name')+'. '+S('desc')+'. Platform: '+S('platform')+'. Current phase: '+PHASE_DEFS[S('activePhase')]?.name+'.';
+    const res=await fetch('/agent-task',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({agentId:'producer',task:context+'\n\nUser question: '+q})});
+    const data=await res.json();
+    loadEl.remove();
+    const aiEl=document.createElement('div');
+    aiEl.style.cssText='background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:8px 10px;font-size:12px;color:var(--text2);line-height:1.6;';
+    aiEl.innerHTML='<span style="color:var(--accent2);font-size:10px;display:block;margin-bottom:3px;">🧠 Studio AI</span>'+data.output;
+    msgs.appendChild(aiEl);
+    msgs.scrollTop=msgs.scrollHeight;
+  }catch(e){loadEl.textContent='Connection error.';}
+}
+document.getElementById('studio-ai-input').addEventListener('keypress',function(e){if(e.key==='Enter')askStudioAI();});
+
+// ── ANALYTICS ─────────────────────────────────────────────────────────────
+function logAnalytics(type,id,size){
+  analyticsLog.push({type:type,id:id,size:size,time:Date.now()});
+  if(analyticsLog.length>200)analyticsLog=analyticsLog.slice(-200);
+  localStorage.setItem('kivo_analytics',JSON.stringify(analyticsLog));
+}
+
+function updateAnalytics(){
+  const totalSize=analyticsLog.reduce(function(a,l){return a+l.size;},0);
+  const estTokens=Math.round(totalSize/4);
+  const estCost=(estTokens*0.000003).toFixed(4);
+  const s=document.getElementById('an-spend'),t=document.getElementById('an-tokens'),c=document.getElementById('an-cmds'),ag=document.getElementById('an-agents');
+  if(s)s.textContent=estCost;if(t)t.textContent=estTokens.toLocaleString();if(c)c.textContent=cmdHistory.length;
+  if(ag)ag.textContent=[...new Set(analyticsLog.map(l=>l.id))].length;
+  const byAgent={};analyticsLog.filter(l=>l.type==='agent-task').forEach(function(t){byAgent[t.id]=(byAgent[t.id]||0)+t.size;});
+  const bae=document.getElementById('an-by-agent');
+  if(bae){
+    const entries=Object.entries(byAgent).sort(function(a,b){return b[1]-a[1];}).slice(0,6);
+    const max=entries.length?entries[0][1]:1;
+    bae.innerHTML=entries.length?entries.map(function(e){const a=AGENTS.find(x=>x.id===e[0]);return '<div class="bar-row"><span class="bar-label">'+(a?a.emoji+' '+a.name.split(' ')[0]:e[0])+'</span><div class="bar-track"><div class="bar-fill" style="width:'+Math.round(e[1]/max*100)+'%"></div></div><span class="bar-val">'+Math.round(e[1]/4)+'tk</span></div>';}).join(''):'<div style="font-size:12px;color:var(--text3);margin-top:8px;">No data.</div>';
+  }
+  const byCmd={};analyticsLog.filter(l=>l.type==='command').forEach(function(l){byCmd[l.id]=(byCmd[l.id]||0)+1;});
+  const bce=document.getElementById('an-by-cmd');
+  if(bce){
+    const entries=Object.entries(byCmd);const max=entries.length?Math.max(...entries.map(e=>e[1])):1;
+    bce.innerHTML=entries.length?entries.map(function(e){return '<div class="bar-row"><span class="bar-label">'+e[0]+'</span><div class="bar-track"><div class="bar-fill" style="width:'+Math.round(e[1]/max*100)+'%"></div></div><span class="bar-val">'+e[1]+'x</span></div>';}).join(''):'<div style="font-size:12px;color:var(--text3);margin-top:8px;">No data.</div>';
+  }
+  const logEl=document.getElementById('an-log');
+  if(logEl)logEl.innerHTML=analyticsLog.slice(-20).reverse().map(function(l){return '<div>['+new Date(l.time).toLocaleTimeString()+'] '+l.type+' — '+l.id+' — ~'+Math.round(l.size/4)+' tokens</div>';}).join('')||'No activity.';
+}
+
+// ── CMD PALETTE ───────────────────────────────────────────────────────────
+const allCmds=[
+  ...COMMANDS.map(c=>({icon:c.icon,name:c.label,desc:'Run workflow',action:function(){runCmd(c.id);}})),
+  ...AGENTS.map(a=>({icon:a.emoji,name:a.name,desc:a.dept+' · '+a.model,action:function(){openAgent(a.id);goSection('agents');}})),
+  {icon:'📊',name:'Analytics',desc:'Usage & cost',action:function(){goSection('analytics');}},
+  {icon:'⚙️',name:'Settings',desc:'Project settings',action:function(){goSection('settings');}},
+  {icon:'📅',name:'Timeline',desc:'Project phases',action:openPhaseModal},
 ];
 
-function openCmd() {
-  document.getElementById('cmd-palette').classList.add('open');
-  document.getElementById('cmd-input').value='';
-  filterCmds('');
-  document.getElementById('cmd-input').focus();
-}
+function openCmd(){document.getElementById('cmd-palette').classList.add('open');document.getElementById('cmd-input').value='';filterCmds('');setTimeout(function(){document.getElementById('cmd-input').focus();},50);}
+function closeCmd(){document.getElementById('cmd-palette').classList.remove('open');}
+document.getElementById('cmd-palette').addEventListener('click',function(e){if(e.target===document.getElementById('cmd-palette'))closeCmd();});
+document.addEventListener('keydown',function(e){if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();openCmd();}if(e.key==='Escape')closeCmd();});
 
-function closeCmd() { document.getElementById('cmd-palette').classList.remove('open'); }
-
-document.getElementById('cmd-palette').addEventListener('click', e => { if(e.target===document.getElementById('cmd-palette')) closeCmd(); });
-
-document.addEventListener('keydown', e => {
-  if ((e.metaKey||e.ctrlKey) && e.key==='k') { e.preventDefault(); openCmd(); }
-  if (e.key==='Escape') closeCmd();
-});
-
-function filterCmds(q) {
-  const filtered = allCmds.filter(c=>c.name.toLowerCase().includes(q.toLowerCase())||c.desc.toLowerCase().includes(q.toLowerCase()));
-  document.getElementById('cmd-results').innerHTML = filtered.slice(0,8).map((c,i)=>`
-    <div class="cmd-item" onclick="c${i}()" id="cmi-${i}">
-      <span class="cmd-item-icon">${c.icon}</span>
-      <span class="cmd-item-name">${c.name}<span style="font-size:11px;color:var(--text3);margin-left:8px">${c.desc}</span></span>
-    </div>
-  `).join('');
-  filtered.slice(0,8).forEach((c,i) => {
-    const el = document.getElementById('cmi-'+i);
-    if (el) el.onclick = () => { c.action(); closeCmd(); };
+function filterCmds(q){
+  const filtered=allCmds.filter(c=>c.name.toLowerCase().includes(q.toLowerCase())||c.desc.toLowerCase().includes(q.toLowerCase()));
+  const results=document.getElementById('cmd-results');
+  results.innerHTML=filtered.slice(0,8).map(function(c,i){
+    return '<div class="cmd-item" id="cmi-'+i+'"><span class="cmd-item-icon">'+c.icon+'</span><span style="flex:1;">'+c.name+'<span style="font-size:11px;color:var(--text3);margin-left:8px">'+c.desc+'</span></span></div>';
+  }).join('');
+  filtered.slice(0,8).forEach(function(c,i){
+    const el=document.getElementById('cmi-'+i);
+    if(el)el.onclick=function(){c.action();closeCmd();};
   });
 }
 
 // ── UTILS ─────────────────────────────────────────────────────────────────
-function ts() { const d=new Date(); return d.getHours()+':'+String(d.getMinutes()).padStart(2,'0'); }
-
-// boot if already authed
-if (localStorage.getItem('kivo_auth') === '1') {
-  document.getElementById('login').style.display = 'none';
-  document.getElementById('app').style.display = 'flex';
-  renderSidebar();
-  renderAgentGrid();
-  updateAnalytics();
-  updateDashboard();
-}
+function ts(){const d=new Date();return d.getHours()+':'+String(d.getMinutes()).padStart(2,'0');}
 </script>
 </body>
 </html>
