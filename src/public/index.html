@@ -1,383 +1,970 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kivo Studios — AI Game Studio</title>
+<title>Kivo Studios — Game Studio OS</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
-  :root{--bg:#0c0c0f;--surface:#141418;--surface2:#1c1c22;--border:rgba(255,255,255,0.06);--border-hover:rgba(255,255,255,0.12);--text:#e8e8f0;--muted:#6b6b80;--accent:#7c6af7;--accent2:#a78bfa;--green:#22d3a0;--amber:#f59e0b;--red:#ef4444;--blue:#3b82f6;}
-  *{margin:0;padding:0;box-sizing:border-box;}
-  body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;height:100vh;display:flex;flex-direction:column;overflow:hidden;}
-  nav{height:52px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:24px;flex-shrink:0;}
-  .logo{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;letter-spacing:-0.3px;}
-  .logo-icon{width:28px;height:28px;background:linear-gradient(135deg,var(--accent),#4f46e5);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;}
-  .nav-tabs{display:flex;gap:2px;margin-left:8px;}
-  .nav-tab{padding:5px 12px;border-radius:6px;font-size:13px;color:var(--muted);cursor:pointer;transition:all .15s;border:none;background:none;font-family:'Inter',sans-serif;}
-  .nav-tab:hover{color:var(--text);background:var(--surface2);}
-  .nav-tab.active{color:var(--text);background:var(--surface2);}
-  .nav-right{margin-left:auto;display:flex;align-items:center;gap:12px;}
-  .status-pill{display:flex;align-items:center;gap:6px;padding:4px 10px;background:rgba(34,211,160,0.08);border:1px solid rgba(34,211,160,0.2);border-radius:20px;font-size:12px;color:var(--green);}
-  .dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
-  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-  .layout{display:flex;flex:1;overflow:hidden;}
-  .sidebar{width:220px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;}
-  .sidebar-section{padding:16px 12px 8px;}
-  .sidebar-label{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;padding:0 4px;margin-bottom:6px;}
-  .cmd-btn{width:100%;display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:6px;font-size:13px;color:var(--muted);cursor:pointer;transition:all .15s;border:none;background:none;font-family:'Inter',sans-serif;text-align:left;}
-  .cmd-btn:hover{color:var(--text);background:var(--surface2);}
-  .cmd-btn.active{color:var(--accent2);background:rgba(124,106,247,0.1);}
-  .cmd-icon{width:18px;height:18px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;}
-  .divider{height:1px;background:var(--border);margin:8px 12px;}
-  .hist-item{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;cursor:pointer;transition:all .15s;}
-  .hist-item:hover{background:var(--surface2);}
-  .hist-item.selected{background:var(--surface2);}
-  .hist-cmd{font-size:12px;color:var(--accent2);font-family:'JetBrains Mono',monospace;flex:1;}
-  .hist-time{font-size:10px;color:var(--muted);}
-  .main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
-  .page{display:none;flex:1;overflow:hidden;flex-direction:column;}
-  .page.active{display:flex;}
-  .output-area{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:12px;}
-  .agent-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;transition:border-color .2s;}
-  .agent-card:hover{border-color:var(--border-hover);}
-  .card-header{padding:12px 16px;display:flex;align-items:center;gap:10px;cursor:pointer;border-bottom:1px solid var(--border);}
-  .card-header:hover{background:rgba(255,255,255,0.02);}
-  .card-avatar{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;}
-  .card-title{font-size:13px;font-weight:500;flex:1;}
-  .card-badge{font-size:11px;padding:2px 8px;border-radius:20px;background:rgba(34,211,160,0.1);color:var(--green);border:1px solid rgba(34,211,160,0.2);}
-  .card-toggle{font-size:12px;color:var(--muted);}
-  .card-body{padding:16px;font-size:13px;line-height:1.8;color:#b0b0c0;font-family:'JetBrains Mono',monospace;white-space:pre-wrap;word-wrap:break-word;max-height:600px;overflow-y:auto;}
-  .card-body.collapsed{display:none;}
-  .bottom-bar{padding:12px 20px;border-top:1px solid var(--border);background:var(--surface);display:flex;gap:8px;align-items:center;}
-  .bottom-bar input{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 14px;font-family:'Inter',sans-serif;font-size:13px;color:var(--text);outline:none;}
-  .bottom-bar input:focus{border-color:var(--accent);}
-  .bottom-bar input::placeholder{color:var(--muted);}
-  .btn{padding:7px 14px;border-radius:7px;font-size:13px;font-family:'Inter',sans-serif;cursor:pointer;transition:all .15s;border:1px solid var(--border);background:var(--surface2);color:var(--text);}
-  .btn:hover{border-color:var(--border-hover);}
-  .btn-primary{background:var(--accent);border-color:var(--accent);color:white;}
-  .btn-primary:hover{background:#6a58e8;}
-  .loading-state{display:flex;align-items:center;gap:12px;padding:20px;color:var(--muted);font-size:13px;}
-  .spinner{width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;}
-  @keyframes spin{to{transform:rotate(360deg)}}
-  .welcome-state{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;gap:12px;color:var(--muted);}
-  .welcome-icon{font-size:48px;}
-  .welcome-title{font-size:18px;font-weight:600;color:var(--text);}
-  .welcome-sub{font-size:13px;}
-  .quick-actions{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;justify-content:center;}
-  .quick-btn{padding:8px 16px;border-radius:8px;font-size:13px;font-family:'JetBrains Mono',monospace;cursor:pointer;border:1px solid var(--border);background:var(--surface2);color:var(--accent2);transition:all .15s;}
-  .quick-btn:hover{border-color:var(--accent);background:rgba(124,106,247,0.08);}
-  .tools-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:20px;}
-  .tool-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px;cursor:pointer;transition:all .2s;}
-  .tool-card:hover{border-color:var(--accent);background:rgba(124,106,247,0.04);}
-  .tool-icon{font-size:28px;margin-bottom:12px;}
-  .tool-name{font-size:14px;font-weight:600;margin-bottom:6px;}
-  .tool-desc{font-size:12px;color:var(--muted);line-height:1.5;}
-  .tag{padding:3px 8px;border-radius:4px;font-size:11px;background:rgba(124,106,247,0.1);color:var(--accent2);border:1px solid rgba(124,106,247,0.2);}
-  .tag-list{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px;}
-  .agent-page-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:16px;}
-  .agent-page-content{display:grid;grid-template-columns:1fr 300px;flex:1;overflow:hidden;}
-  .agent-chat{display:flex;flex-direction:column;border-right:1px solid var(--border);overflow:hidden;}
-  .chat-messages{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:12px;}
-  .chat-empty{text-align:center;color:var(--muted);font-size:13px;margin:auto;}
-  .msg{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;font-size:13px;line-height:1.7;color:#b0b0c0;font-family:'JetBrains Mono',monospace;white-space:pre-wrap;word-wrap:break-word;}
-  .msg-header{font-size:11px;color:var(--muted);margin-bottom:8px;font-family:'Inter',sans-serif;}
-  .msg-task{font-size:11px;color:var(--accent2);margin-bottom:6px;font-family:'Inter',sans-serif;}
-  .chat-input{padding:16px 20px;border-top:1px solid var(--border);display:flex;gap:8px;}
-  .chat-input textarea{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-family:'Inter',sans-serif;font-size:13px;color:var(--text);resize:none;outline:none;height:60px;}
-  .chat-input textarea:focus{border-color:var(--accent);}
-  .agent-info-panel{padding:20px;overflow-y:auto;display:flex;flex-direction:column;gap:16px;}
-  .info-title{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;}
-  .info-card{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;}
-  .info-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;font-size:12px;}
-  .info-key{color:var(--muted);}
-  .info-val{color:var(--text);font-weight:500;}
-  ::-webkit-scrollbar{width:4px;height:4px;}
-  ::-webkit-scrollbar-track{background:transparent;}
-  ::-webkit-scrollbar-thumb{background:var(--surface2);border-radius:4px;}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+:root {
+  --bg: #080810;
+  --surface: #0f0f1a;
+  --surface2: #161625;
+  --surface3: #1e1e30;
+  --border: rgba(255,255,255,0.05);
+  --border2: rgba(255,255,255,0.1);
+  --text: #e2e2f0;
+  --text2: #9090b0;
+  --text3: #5a5a78;
+  --accent: #6c5ce7;
+  --accent2: #a29bfe;
+  --green: #00cec9;
+  --amber: #fdcb6e;
+  --red: #e17055;
+  --blue: #0984e3;
+  --purple: #6c5ce7;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; height: 100vh; display: flex; overflow: hidden; }
+
+/* LOGIN */
+#login {
+  position: fixed; inset: 0; background: var(--bg);
+  display: flex; align-items: center; justify-content: center; z-index: 9999;
+}
+.login-box {
+  width: 360px; padding: 48px 40px; background: var(--surface);
+  border: 1px solid var(--border2); border-radius: 16px; text-align: center;
+}
+.login-logo {
+  width: 52px; height: 52px; border-radius: 14px;
+  background: linear-gradient(135deg, var(--accent), #4834d4);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px; margin: 0 auto 20px;
+}
+.login-title { font-size: 20px; font-weight: 600; margin-bottom: 4px; }
+.login-sub { font-size: 13px; color: var(--text2); margin-bottom: 28px; }
+.login-input {
+  width: 100%; background: var(--surface2); border: 1px solid var(--border2);
+  border-radius: 8px; padding: 11px 14px; font-size: 14px; color: var(--text);
+  outline: none; margin-bottom: 10px; font-family: 'Inter', sans-serif;
+}
+.login-input:focus { border-color: var(--accent); }
+.login-btn {
+  width: 100%; background: var(--accent); border: none; border-radius: 8px;
+  padding: 11px; font-size: 14px; color: white; cursor: pointer;
+  font-family: 'Inter', sans-serif; font-weight: 500; transition: opacity .15s;
+}
+.login-btn:hover { opacity: .85; }
+.login-err { color: var(--red); font-size: 12px; margin-top: 8px; display: none; }
+
+/* LAYOUT */
+#app { display: flex; width: 100%; height: 100vh; }
+
+/* LEFT NAV */
+.leftnav {
+  width: 56px; background: var(--surface); border-right: 1px solid var(--border);
+  display: flex; flex-direction: column; align-items: center;
+  padding: 12px 0; gap: 4px; flex-shrink: 0;
+}
+.nav-logo {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: linear-gradient(135deg, var(--accent), #4834d4);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; margin-bottom: 16px;
+}
+.nav-icon {
+  width: 36px; height: 36px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; cursor: pointer; transition: all .15s;
+  color: var(--text3); position: relative;
+}
+.nav-icon:hover { background: var(--surface2); color: var(--text2); }
+.nav-icon.active { background: var(--surface2); color: var(--accent2); }
+.nav-icon .tooltip {
+  position: absolute; left: 48px; background: var(--surface3);
+  border: 1px solid var(--border2); border-radius: 6px;
+  padding: 4px 10px; font-size: 12px; color: var(--text);
+  white-space: nowrap; pointer-events: none; opacity: 0;
+  transition: opacity .15s; z-index: 100;
+}
+.nav-icon:hover .tooltip { opacity: 1; }
+.nav-sep { width: 20px; height: 1px; background: var(--border); margin: 4px 0; }
+.nav-bottom { margin-top: auto; }
+
+/* SIDEBAR */
+.sidebar {
+  width: 220px; background: var(--surface); border-right: 1px solid var(--border);
+  display: flex; flex-direction: column; flex-shrink: 0; overflow-y: auto;
+}
+.sidebar-header {
+  padding: 16px 16px 8px; font-size: 11px; font-weight: 600;
+  color: var(--text3); text-transform: uppercase; letter-spacing: .8px;
+}
+.sidebar-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 12px; margin: 1px 6px; border-radius: 6px;
+  font-size: 13px; color: var(--text2); cursor: pointer; transition: all .15s;
+}
+.sidebar-item:hover { background: var(--surface2); color: var(--text); }
+.sidebar-item.active { background: var(--surface2); color: var(--text); }
+.sidebar-item .si-icon { font-size: 14px; width: 18px; text-align: center; }
+.sidebar-item .si-badge {
+  margin-left: auto; font-size: 10px; padding: 1px 6px;
+  border-radius: 10px; background: var(--accent); color: white;
+}
+.sidebar-sep { height: 1px; background: var(--border); margin: 8px 12px; }
+
+/* MAIN */
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+/* TOP BAR */
+.topbar {
+  height: 48px; background: var(--surface); border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; padding: 0 20px; gap: 16px; flex-shrink: 0;
+}
+.topbar-title { font-size: 14px; font-weight: 500; flex: 1; }
+.topbar-pills { display: flex; gap: 6px; }
+.pill {
+  padding: 4px 10px; border-radius: 20px; font-size: 11px;
+  background: var(--surface2); border: 1px solid var(--border2);
+  color: var(--text2); cursor: pointer; transition: all .15s;
+}
+.pill:hover { border-color: var(--accent); color: var(--accent2); }
+.pill.active { background: rgba(108,92,231,.15); border-color: var(--accent); color: var(--accent2); }
+.topbar-actions { display: flex; gap: 6px; align-items: center; }
+.tba-btn {
+  padding: 5px 12px; border-radius: 6px; font-size: 12px;
+  border: 1px solid var(--border2); background: var(--surface2);
+  color: var(--text2); cursor: pointer; transition: all .15s;
+  font-family: 'Inter', sans-serif;
+}
+.tba-btn:hover { color: var(--text); border-color: var(--border2); }
+.tba-btn.primary { background: var(--accent); border-color: var(--accent); color: white; }
+.tba-btn.primary:hover { opacity: .85; }
+
+/* CONTENT */
+.content { flex: 1; overflow-y: auto; padding: 24px; }
+
+/* CARDS */
+.stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+.stat-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; padding: 16px;
+}
+.stat-label { font-size: 11px; color: var(--text3); margin-bottom: 8px; text-transform: uppercase; letter-spacing: .5px; }
+.stat-value { font-size: 22px; font-weight: 600; color: var(--text); }
+.stat-sub { font-size: 11px; color: var(--text3); margin-top: 4px; }
+.stat-delta { font-size: 11px; margin-top: 4px; }
+.stat-delta.up { color: var(--green); }
+.stat-delta.down { color: var(--red); }
+
+.section-title { font-size: 13px; font-weight: 500; color: var(--text2); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.section-title span { flex: 1; }
+.section-title a { font-size: 12px; color: var(--accent2); cursor: pointer; }
+
+/* ACTIVITY */
+.activity-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 20px; }
+.activity-item {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 8px; padding: 10px 14px;
+  display: flex; align-items: center; gap: 10px;
+}
+.act-icon {
+  width: 28px; height: 28px; border-radius: 7px;
+  display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0;
+}
+.act-content { flex: 1; min-width: 0; }
+.act-title { font-size: 13px; color: var(--text); }
+.act-sub { font-size: 11px; color: var(--text3); margin-top: 2px; }
+.act-time { font-size: 11px; color: var(--text3); flex-shrink: 0; }
+
+/* APPROVALS */
+.approval-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+.approval-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 8px; padding: 14px;
+}
+.appr-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.appr-icon { font-size: 16px; }
+.appr-title { font-size: 13px; font-weight: 500; }
+.appr-agent { font-size: 11px; color: var(--text3); margin-bottom: 10px; }
+.appr-actions { display: flex; gap: 6px; }
+.appr-btn {
+  flex: 1; padding: 5px 0; border-radius: 5px; font-size: 11px;
+  border: 1px solid var(--border2); background: none; color: var(--text2);
+  cursor: pointer; font-family: 'Inter', sans-serif; transition: all .15s; text-align: center;
+}
+.appr-btn.approve { border-color: var(--green); color: var(--green); }
+.appr-btn.approve:hover { background: rgba(0,206,201,.1); }
+.appr-btn.reject { border-color: var(--red); color: var(--red); }
+.appr-btn.reject:hover { background: rgba(225,112,85,.1); }
+
+/* TWO COL */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+
+/* AGENT GRID */
+.agent-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.agent-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; padding: 16px; cursor: pointer; transition: all .2s;
+}
+.agent-card:hover { border-color: var(--accent); background: rgba(108,92,231,.04); }
+.agent-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.agent-emoji {
+  width: 36px; height: 36px; border-radius: 9px;
+  display: flex; align-items: center; justify-content: center; font-size: 18px;
+}
+.agent-card-name { font-size: 13px; font-weight: 500; }
+.agent-card-dept { font-size: 11px; color: var(--text3); margin-top: 1px; }
+.agent-online { width: 7px; height: 7px; border-radius: 50%; background: var(--green); margin-left: auto; }
+.agent-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+.agent-tag {
+  font-size: 10px; padding: 2px 7px; border-radius: 4px;
+}
+
+/* AGENT DETAIL */
+.agent-detail { display: none; flex: 1; flex-direction: column; overflow: hidden; }
+.agent-detail.visible { display: flex; }
+.agent-detail-header {
+  padding: 20px 24px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 14px; flex-shrink: 0;
+}
+.adh-back {
+  padding: 5px 10px; border-radius: 6px; border: 1px solid var(--border2);
+  background: none; color: var(--text2); cursor: pointer; font-size: 12px;
+  font-family: 'Inter', sans-serif; transition: all .15s;
+}
+.adh-back:hover { color: var(--text); }
+.adh-avatar {
+  width: 44px; height: 44px; border-radius: 11px;
+  display: flex; align-items: center; justify-content: center; font-size: 22px;
+}
+.adh-name { font-size: 17px; font-weight: 600; }
+.adh-meta { font-size: 12px; color: var(--text3); margin-top: 2px; }
+.adh-actions { margin-left: auto; display: flex; gap: 8px; }
+
+.agent-detail-body {
+  display: grid; grid-template-columns: 1fr 300px;
+  flex: 1; overflow: hidden;
+}
+.agent-chat { display: flex; flex-direction: column; border-right: 1px solid var(--border); overflow: hidden; }
+.agent-chat-tabs {
+  display: flex; gap: 0; border-bottom: 1px solid var(--border); flex-shrink: 0;
+}
+.chat-tab {
+  padding: 10px 16px; font-size: 12px; color: var(--text3);
+  cursor: pointer; border-bottom: 2px solid transparent; transition: all .15s;
+}
+.chat-tab:hover { color: var(--text2); }
+.chat-tab.active { color: var(--accent2); border-bottom-color: var(--accent); }
+.chat-messages {
+  flex: 1; overflow-y: auto; padding: 20px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.chat-empty { text-align: center; color: var(--text3); font-size: 13px; margin: auto; }
+.msg {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 8px; padding: 12px 14px;
+}
+.msg-meta { font-size: 11px; color: var(--text3); margin-bottom: 6px; font-family: 'Inter', sans-serif; }
+.msg-task { font-size: 11px; color: var(--accent2); margin-bottom: 4px; }
+.msg-body { font-size: 12px; line-height: 1.7; color: var(--text2); white-space: pre-wrap; word-wrap: break-word; font-family: 'JetBrains Mono', monospace; }
+.chat-input-area {
+  padding: 14px 16px; border-top: 1px solid var(--border); display: flex; gap: 8px; flex-shrink: 0;
+}
+.chat-input-area textarea {
+  flex: 1; background: var(--surface2); border: 1px solid var(--border2);
+  border-radius: 8px; padding: 9px 12px; font-family: 'Inter', sans-serif;
+  font-size: 13px; color: var(--text); resize: none; outline: none; height: 56px;
+}
+.chat-input-area textarea:focus { border-color: var(--accent); }
+
+/* AGENT INFO PANEL */
+.agent-info-panel { padding: 18px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
+.info-section-title {
+  font-size: 10px; font-weight: 600; color: var(--text3);
+  text-transform: uppercase; letter-spacing: .8px; margin-bottom: 8px;
+}
+.info-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 12px; }
+.info-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 12px; }
+.info-key { color: var(--text3); }
+.info-val { color: var(--text); font-weight: 500; }
+.tag { padding: 3px 8px; border-radius: 4px; font-size: 10px; display: inline-block; margin: 2px; }
+
+/* ANALYTICS */
+.analytics-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+.chart-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; padding: 16px;
+}
+.chart-title { font-size: 12px; color: var(--text2); margin-bottom: 12px; font-weight: 500; }
+.chart-big { font-size: 28px; font-weight: 700; color: var(--text); }
+.chart-sub { font-size: 11px; color: var(--text3); margin-top: 4px; }
+.bar-chart { margin-top: 12px; display: flex; flex-direction: column; gap: 6px; }
+.bar-row { display: flex; align-items: center; gap: 8px; }
+.bar-label { font-size: 11px; color: var(--text3); width: 100px; flex-shrink: 0; }
+.bar-track { flex: 1; height: 6px; background: var(--surface2); border-radius: 3px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 3px; background: var(--accent); }
+.bar-val { font-size: 11px; color: var(--text2); width: 40px; text-align: right; flex-shrink: 0; }
+
+/* CMD PALETTE */
+#cmd-palette {
+  position: fixed; inset: 0; background: rgba(0,0,0,.7);
+  display: none; align-items: flex-start; justify-content: center;
+  padding-top: 120px; z-index: 1000;
+}
+#cmd-palette.open { display: flex; }
+.cmd-box {
+  width: 540px; background: var(--surface2); border: 1px solid var(--border2);
+  border-radius: 12px; overflow: hidden;
+}
+.cmd-input {
+  width: 100%; padding: 14px 16px; background: none; border: none;
+  border-bottom: 1px solid var(--border); font-size: 14px;
+  color: var(--text); outline: none; font-family: 'Inter', sans-serif;
+}
+.cmd-results { max-height: 300px; overflow-y: auto; }
+.cmd-item {
+  padding: 10px 16px; display: flex; align-items: center; gap: 10px;
+  cursor: pointer; transition: background .1s; font-size: 13px;
+}
+.cmd-item:hover, .cmd-item.selected { background: var(--surface3); }
+.cmd-item-icon { font-size: 16px; width: 24px; text-align: center; }
+.cmd-item-name { flex: 1; }
+.cmd-item-kbd { font-size: 10px; color: var(--text3); font-family: 'JetBrains Mono', monospace; }
+
+/* OUTPUT AREA - Studio page */
+.studio-output { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+.output-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; overflow: hidden;
+}
+.output-card-header {
+  padding: 10px 14px; display: flex; align-items: center; gap: 8px;
+  cursor: pointer; border-bottom: 1px solid var(--border);
+}
+.output-card-header:hover { background: rgba(255,255,255,.02); }
+.output-card-avatar { width: 26px; height: 26px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 13px; }
+.output-card-name { font-size: 13px; font-weight: 500; flex: 1; }
+.output-card-badge {
+  font-size: 10px; padding: 2px 7px; border-radius: 10px;
+  background: rgba(0,206,201,.1); color: var(--green); border: 1px solid rgba(0,206,201,.2);
+}
+.output-card-toggle { font-size: 11px; color: var(--text3); }
+.output-card-body {
+  padding: 14px; font-size: 12px; line-height: 1.8;
+  color: var(--text2); font-family: 'JetBrains Mono', monospace;
+  white-space: pre-wrap; word-wrap: break-word; max-height: 500px; overflow-y: auto;
+}
+.output-card-body.collapsed { display: none; }
+
+.studio-bottom {
+  padding: 12px 20px; border-top: 1px solid var(--border);
+  background: var(--surface); display: flex; gap: 8px; align-items: center; flex-shrink: 0;
+}
+.studio-bottom input {
+  flex: 1; background: var(--surface2); border: 1px solid var(--border2);
+  border-radius: 8px; padding: 9px 14px; font-family: 'Inter', sans-serif;
+  font-size: 13px; color: var(--text); outline: none;
+}
+.studio-bottom input:focus { border-color: var(--accent); }
+.studio-bottom input::placeholder { color: var(--text3); }
+
+.welcome-studio {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; flex: 1; gap: 10px; color: var(--text3);
+}
+.welcome-studio-icon { font-size: 40px; }
+.welcome-studio-title { font-size: 16px; font-weight: 500; color: var(--text2); }
+.welcome-studio-sub { font-size: 13px; }
+.welcome-cmds { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; justify-content: center; }
+.welcome-cmd {
+  padding: 6px 14px; border-radius: 6px; font-size: 12px;
+  font-family: 'JetBrains Mono', monospace; cursor: pointer;
+  border: 1px solid var(--border2); background: var(--surface2); color: var(--accent2);
+  transition: all .15s;
+}
+.welcome-cmd:hover { border-color: var(--accent); }
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 4px; }
+
+/* LOADING */
+.loading-state { display: flex; align-items: center; gap: 10px; padding: 20px; color: var(--text3); font-size: 13px; }
+.spinner { width: 14px; height: 14px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
 </style>
 </head>
 <body>
-<div id="login-screen" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#0c0c0f;display:flex;align-items:center;justify-content:center;z-index:9999;">
-  <div style="background:#141418;border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:40px;width:340px;text-align:center;">
-    <div style="width:48px;height:48px;background:linear-gradient(135deg,#7c6af7,#4f46e5);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 20px;">🎮</div>
-    <div style="font-size:18px;font-weight:600;margin-bottom:6px;">Kivo Studios</div>
-    <div style="font-size:13px;color:#6b6b80;margin-bottom:24px;">AI Game Studio — Private Access</div>
-    <input type="password" id="pw-input" placeholder="Enter password..." style="width:100%;background:#1c1c22;border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:10px 14px;font-size:14px;color:#e8e8f0;outline:none;margin-bottom:12px;font-family:'Inter',sans-serif;">
-    <button onclick="checkPassword()" style="width:100%;background:#7c6af7;border:none;border-radius:8px;padding:10px;font-size:14px;color:white;cursor:pointer;font-family:'Inter',sans-serif;">Enter Studio ↗</button>
-    <div id="pw-error" style="color:#ef4444;font-size:12px;margin-top:8px;display:none;">Wrong password</div>
+
+<!-- LOGIN -->
+<div id="login">
+  <div class="login-box">
+    <div class="login-logo">🎮</div>
+    <div class="login-title">Kivo Studios</div>
+    <div class="login-sub">Game Studio OS — Private Access</div>
+    <input type="password" id="pw" class="login-input" placeholder="Enter password..." />
+    <button class="login-btn" onclick="doLogin()">Enter Studio</button>
+    <div class="login-err" id="pw-err">Incorrect password</div>
   </div>
 </div>
-<nav>
-  <div class="logo"><div class="logo-icon">🎮</div>Kivo Studios</div>
-  <div class="nav-tabs">
-    <button class="nav-tab active" onclick="showPage('studio',this)">Studio</button>
-    <button class="nav-tab" onclick="showPage('agents',this)">Agents</button>
-    <button class="nav-tab" onclick="showPage('tools',this)">Tools</button>
-  </div>
-  <div class="nav-right">
-    <div class="status-pill"><div class="dot"></div>15 agents online</div>
-  </div>
-</nav>
-<div class="layout">
-  <div class="sidebar">
-    <div class="sidebar-section">
-      <div class="sidebar-label">Commands</div>
-      <button class="cmd-btn" onclick="run('/new-game',this)"><div class="cmd-icon" style="background:rgba(124,106,247,0.15);color:#a78bfa">✦</div>/new-game</button>
-      <button class="cmd-btn" onclick="run('/game-design-doc',this)"><div class="cmd-icon" style="background:rgba(59,130,246,0.15);color:#60a5fa">📋</div>/game-design-doc</button>
-      <button class="cmd-btn" onclick="run('/build',this)"><div class="cmd-icon" style="background:rgba(34,211,160,0.15);color:#22d3a0">⚡</div>/build</button>
-      <button class="cmd-btn" onclick="run('/playtest',this)"><div class="cmd-icon" style="background:rgba(245,158,11,0.15);color:#f59e0b">🎮</div>/playtest</button>
-      <button class="cmd-btn" onclick="run('/steam-page',this)"><div class="cmd-icon" style="background:rgba(239,68,68,0.15);color:#ef4444">🚀</div>/steam-page</button>
-      <button class="cmd-btn" onclick="run('/launch-plan',this)"><div class="cmd-icon" style="background:rgba(16,185,129,0.15);color:#10b981">📅</div>/launch-plan</button>
+
+<!-- APP -->
+<div id="app" style="display:none;">
+
+  <!-- LEFT NAV ICONS -->
+  <div class="leftnav">
+    <div class="nav-logo">🎮</div>
+    <div class="nav-icon active" id="ni-studio" onclick="switchSection('studio')">
+      🏠<span class="tooltip">Studio</span>
     </div>
-    <div class="divider"></div>
-    <div class="sidebar-section">
-      <div class="sidebar-label">History</div>
-      <div id="history-list"></div>
+    <div class="nav-icon" id="ni-agents" onclick="switchSection('agents')">
+      🤖<span class="tooltip">Agents</span>
+    </div>
+    <div class="nav-icon" id="ni-analytics" onclick="switchSection('analytics')">
+      📊<span class="tooltip">Analytics</span>
+    </div>
+    <div class="nav-sep"></div>
+    <div class="nav-icon" id="ni-settings" onclick="switchSection('settings')">
+      ⚙️<span class="tooltip">Settings</span>
+    </div>
+    <div class="nav-bottom">
+      <div class="nav-icon" onclick="openCmd()">
+        🔍<span class="tooltip">Command Palette ⌘K</span>
+      </div>
     </div>
   </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar" id="sidebar">
+    <!-- filled by JS -->
+  </div>
+
+  <!-- MAIN -->
   <div class="main">
-    <div id="page-studio" class="page active">
-      <div id="output" class="output-area">
-        <div class="welcome-state">
-          <div class="welcome-icon">🎮</div>
-          <div class="welcome-title">Throne Runners: Together</div>
-          <div class="welcome-sub">AI-powered game studio — select a command to begin</div>
-          <div class="quick-actions">
-            <button class="quick-btn" onclick="run('/new-game')">/new-game</button>
-            <button class="quick-btn" onclick="run('/game-design-doc')">/game-design-doc</button>
-            <button class="quick-btn" onclick="run('/build')">/build</button>
-            <button class="quick-btn" onclick="run('/playtest')">/playtest</button>
+    <div class="topbar">
+      <div class="topbar-title" id="topbar-title">Studio</div>
+      <div class="topbar-pills" id="topbar-pills"></div>
+      <div class="topbar-actions" id="topbar-actions"></div>
+    </div>
+
+    <!-- STUDIO SECTION -->
+    <div id="section-studio" style="display:flex;flex-direction:column;flex:1;overflow:hidden;">
+      <div class="studio-output" id="studio-output">
+        <div class="welcome-studio">
+          <div class="welcome-studio-icon">🎮</div>
+          <div class="welcome-studio-title">Throne Runners: Together</div>
+          <div class="welcome-studio-sub">Select a workflow to begin</div>
+          <div class="welcome-cmds">
+            <div class="welcome-cmd" onclick="runCmd('/new-game')">/new-game</div>
+            <div class="welcome-cmd" onclick="runCmd('/game-design-doc')">/game-design-doc</div>
+            <div class="welcome-cmd" onclick="runCmd('/build')">/build</div>
+            <div class="welcome-cmd" onclick="runCmd('/playtest')">/playtest</div>
+            <div class="welcome-cmd" onclick="runCmd('/steam-page')">/steam-page</div>
           </div>
         </div>
       </div>
-      <div class="bottom-bar">
-        <input type="text" id="ctx" placeholder="Add context..." />
-        <button class="btn btn-primary" onclick="runCtx()">Run ↗</button>
+      <div class="studio-bottom">
+        <input type="text" id="ctx-input" placeholder="Add context (optional)..." />
+        <button class="tba-btn primary" onclick="runFromCtx()">Run ↗</button>
       </div>
     </div>
-    <div id="page-agents" class="page" style="overflow-y:auto;">
-      <div id="agent-list-view" style="padding:20px;">
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;" id="agent-cards"></div>
+
+    <!-- AGENTS SECTION -->
+    <div id="section-agents" style="display:none;flex:1;overflow:hidden;flex-direction:column;">
+      <div id="agent-list-view" style="flex:1;overflow-y:auto;padding:20px;">
+        <div class="agent-grid" id="agent-grid"></div>
       </div>
-      <div id="agent-detail-view" style="display:none;flex-direction:column;height:100%;">
-        <div class="agent-page-header">
-          <button class="btn" onclick="closeAgentDetail()">← Back</button>
-          <div id="detail-avatar" style="width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:22px;"></div>
-          <div><div id="detail-name" style="font-size:17px;font-weight:600;"></div><div id="detail-role" style="font-size:12px;color:var(--muted);margin-top:2px;"></div></div>
+      <div class="agent-detail" id="agent-detail">
+        <div class="agent-detail-header">
+          <button class="adh-back" onclick="closeAgentDetail()">← Back</button>
+          <div class="adh-avatar" id="adh-avatar"></div>
+          <div>
+            <div class="adh-name" id="adh-name"></div>
+            <div class="adh-meta" id="adh-meta"></div>
+          </div>
+          <div class="adh-actions">
+            <button class="tba-btn primary" onclick="runAgentTask()">Run Task ↗</button>
+          </div>
         </div>
-        <div class="agent-page-content" style="flex:1;overflow:hidden;">
+        <div class="agent-detail-body">
           <div class="agent-chat">
-            <div id="detail-messages" class="chat-messages"><div class="chat-empty">No output yet. Give this agent a task below.</div></div>
-            <div class="chat-input">
-              <textarea id="detail-task-input" placeholder="Give this agent a specific task..."></textarea>
-              <button class="btn btn-primary" onclick="runAgentTask()" style="height:60px;padding:0 16px;">Run</button>
+            <div class="agent-chat-tabs">
+              <div class="chat-tab active">Chat</div>
+              <div class="chat-tab">Artifacts</div>
+              <div class="chat-tab">History</div>
+            </div>
+            <div class="chat-messages" id="agent-messages">
+              <div class="chat-empty">No output yet. Give this agent a task.</div>
+            </div>
+            <div class="chat-input-area">
+              <textarea id="agent-task-input" placeholder="Give this agent a specific task..."></textarea>
+              <button class="tba-btn primary" onclick="runAgentTask()" style="height:56px;padding:0 14px;">Run</button>
             </div>
           </div>
           <div class="agent-info-panel">
-            <div><div class="info-title">Agent Info</div><div class="info-card"><div class="info-row"><span class="info-key">Department</span><span id="detail-dept" class="info-val">—</span></div><div class="info-row"><span class="info-key">Status</span><span class="info-val" style="color:var(--green)">● Online</span></div><div class="info-row"><span class="info-key">Tasks run</span><span id="detail-tasks" class="info-val">0</span></div></div></div>
-            <div><div class="info-title">Responsibilities</div><div id="detail-resp" class="tag-list"></div></div>
+            <div>
+              <div class="info-section-title">Agent Info</div>
+              <div class="info-card">
+                <div class="info-row"><span class="info-key">Department</span><span class="info-val" id="ai-dept">—</span></div>
+                <div class="info-row"><span class="info-key">Status</span><span class="info-val" style="color:var(--green)">● Online</span></div>
+                <div class="info-row"><span class="info-key">Model</span><span class="info-val" id="ai-model">—</span></div>
+                <div class="info-row"><span class="info-key">Tasks run</span><span class="info-val" id="ai-tasks">0</span></div>
+              </div>
+            </div>
+            <div>
+              <div class="info-section-title">Responsibilities</div>
+              <div id="ai-resp"></div>
+            </div>
+            <div>
+              <div class="info-section-title">Handoffs To</div>
+              <div id="ai-handoffs"></div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <div id="page-tools" class="page">
-      <div class="tools-grid">
-        <div class="tool-card" onclick="downloadOutput()"><div class="tool-icon">📥</div><div class="tool-name">Export Output</div><div class="tool-desc">Download latest command output as markdown</div></div>
-        <div class="tool-card" onclick="copyLastOutput()"><div class="tool-icon">📋</div><div class="tool-name">Copy Output</div><div class="tool-desc">Copy latest output to clipboard</div></div>
-        <div class="tool-card" onclick="clearHistory()"><div class="tool-icon">🗑️</div><div class="tool-name">Clear History</div><div class="tool-desc">Clear all saved command history</div></div>
-        <div class="tool-card" onclick="showStats()"><div class="tool-icon">📊</div><div class="tool-name">Studio Stats</div><div class="tool-desc">View total commands, agents used, output generated</div></div>
-        <div class="tool-card" onclick="runAll()"><div class="tool-icon">⚡</div><div class="tool-name">Full Pipeline</div><div class="tool-desc">Run GDD → Build → Playtest in sequence</div></div>
-        <div class="tool-card" onclick="window.open('https://github.com/kivostudios/ai-game-studio','_blank')"><div class="tool-icon">🐙</div><div class="tool-name">GitHub</div><div class="tool-desc">Open project repository on GitHub</div></div>
+
+    <!-- ANALYTICS SECTION -->
+    <div id="section-analytics" style="display:none;flex:1;overflow-y:auto;padding:24px;">
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-label">Total API Spend</div>
+          <div class="stat-value">$<span id="an-spend">0.00</span></div>
+          <div class="stat-sub">This session</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Total Tokens</div>
+          <div class="stat-value" id="an-tokens">0</div>
+          <div class="stat-sub">Input + Output</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Commands Run</div>
+          <div class="stat-value" id="an-cmds">0</div>
+          <div class="stat-sub">All time</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Agents Used</div>
+          <div class="stat-value" id="an-agents">0</div>
+          <div class="stat-sub">Unique agents</div>
+        </div>
+      </div>
+      <div class="two-col">
+        <div class="chart-card">
+          <div class="chart-title">Spend by Agent</div>
+          <div class="bar-chart" id="an-by-agent"></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Commands by Type</div>
+          <div class="bar-chart" id="an-by-cmd"></div>
+        </div>
+      </div>
+      <div class="chart-card" style="margin-bottom:16px;">
+        <div class="chart-title">Recent Activity Log</div>
+        <div id="an-log" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text2);line-height:1.8;max-height:200px;overflow-y:auto;"></div>
+      </div>
+    </div>
+
+    <!-- SETTINGS SECTION -->
+    <div id="section-settings" style="display:none;flex:1;overflow-y:auto;padding:24px;">
+      <div class="chart-card">
+        <div class="chart-title">Studio Settings</div>
+        <div style="font-size:13px;color:var(--text2);margin-top:8px;">Settings panel — coming soon.</div>
       </div>
     </div>
   </div>
 </div>
+
+<!-- COMMAND PALETTE -->
+<div id="cmd-palette">
+  <div class="cmd-box">
+    <input class="cmd-input" id="cmd-input" placeholder="Type a command..." oninput="filterCmds(this.value)" />
+    <div class="cmd-results" id="cmd-results"></div>
+  </div>
+</div>
+
 <script>
-async function checkPassword(){
-  const pw=document.getElementById('pw-input').value;
-  const res=await fetch('/auth',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pw})});
-  const data=await res.json();
-  if(data.ok){localStorage.setItem('kivo_auth','1');document.getElementById('login-screen').style.display='none';}
-  else{document.getElementById('pw-error').style.display='block';}
-}
-document.getElementById('pw-input').addEventListener('keypress',e=>{if(e.key==='Enter')checkPassword();});
-if(localStorage.getItem('kivo_auth')==='1'){document.getElementById('login-screen').style.display='none';}
-
-const AGENTS=[
-  {id:'creativedirector',name:'Creative Director',dept:'Design',emoji:'🎨',resp:['Game concepts','Creative vision','Art direction','Final approval']},
-  {id:'gamedesigner',name:'Game Designer',dept:'Design',emoji:'🎲',resp:['Core loop','Mechanics','GDD writing','Player journey']},
-  {id:'systemdesigner',name:'System Designer',dept:'Design',emoji:'⚙️',resp:['Balance','Numbers','Economy','Difficulty']},
-  {id:'leveldesigner',name:'Level Designer',dept:'Design',emoji:'🗺️',resp:['Maps','Level flow','Checkpoints','Pacing']},
-  {id:'technicaldirector',name:'Technical Director',dept:'Tech',emoji:'🔧',resp:['Architecture','Tech decisions','Code standards','Lead']},
-  {id:'gameplaydeveloper',name:'Gameplay Developer',dept:'Tech',emoji:'💻',resp:['C# scripts','Unity','Physics','AI systems']},
-  {id:'uiuxdesigner',name:'UI/UX Designer',dept:'Tech',emoji:'🖼️',resp:['Menus','HUD','Typography','UX flow']},
-  {id:'toolsengineer',name:'Tools Engineer',dept:'Tech',emoji:'🛠️',resp:['Pipeline','GitHub','Automation','Build']},
-  {id:'qalead',name:'QA Lead',dept:'Quality',emoji:'🔍',resp:['Test plans','Bug reports','Release readiness','QA']},
-  {id:'playtester',name:'Playtester',dept:'Quality',emoji:'🕹️',resp:['Player feedback','Fun factor','Pain points','Reports']},
-  {id:'producer',name:'Producer',dept:'Business',emoji:'📅',resp:['Schedule','Priorities','Risk','Coordination']},
-  {id:'marketinglead',name:'Marketing Lead',dept:'Business',emoji:'📣',resp:['Strategy','Audience','Messaging','Campaigns']},
-  {id:'contentcreator',name:'Content Creator',dept:'Business',emoji:'✍️',resp:['Devlogs','Social posts','Trailers','Press kit']},
-  {id:'steammanager',name:'Steam Manager',dept:'Business',emoji:'🚀',resp:['Store page','Tags','Pricing','Launch']},
-  {id:'analyticsspecialist',name:'Analytics Specialist',dept:'Data',emoji:'📊',resp:['Playtest data','Retention','Metrics','Reports']},
+// ── DATA ──────────────────────────────────────────────────────────────────
+const AGENTS = [
+  {id:'creativedirector',name:'Creative Director',dept:'Design',emoji:'🎨',model:'Claude Opus',resp:['Game concepts','Creative vision','Art direction','Final approval'],handoffs:['Game Designer','Producer']},
+  {id:'gamedesigner',name:'Game Designer',dept:'Design',emoji:'🎲',model:'Claude Sonnet',resp:['Core loop','Mechanics','GDD writing','Player journey'],handoffs:['System Designer','Level Designer']},
+  {id:'systemdesigner',name:'System Designer',dept:'Design',emoji:'⚙️',model:'GPT-4o',resp:['Balance','Numbers','Economy','Difficulty curve'],handoffs:['Gameplay Developer']},
+  {id:'leveldesigner',name:'Level Designer',dept:'Design',emoji:'🗺️',model:'Claude Sonnet',resp:['Maps','Level flow','Checkpoints','Pacing'],handoffs:['Gameplay Developer']},
+  {id:'technicaldirector',name:'Technical Director',dept:'Tech',emoji:'🔧',model:'GPT-4o',resp:['Architecture','Tech decisions','Code standards'],handoffs:['Gameplay Developer','Tools Engineer']},
+  {id:'gameplaydeveloper',name:'Gameplay Developer',dept:'Tech',emoji:'💻',model:'GPT-4o',resp:['C# scripts','Unity','Physics','AI systems'],handoffs:['QA Lead']},
+  {id:'toolsengineer',name:'Tools Engineer',dept:'Tech',emoji:'🛠️',model:'GPT-4o',resp:['Pipeline','GitHub','Automation','Build'],handoffs:['QA Lead']},
+  {id:'qalead',name:'QA Lead',dept:'Quality',emoji:'🔍',model:'GPT-4o',resp:['Test plans','Bug reports','Release readiness'],handoffs:['Gameplay Developer','Producer']},
+  {id:'producer',name:'Producer',dept:'Business',emoji:'📅',model:'Claude Sonnet',resp:['Schedule','Priorities','Risk','Coordination'],handoffs:['Founder']},
+  {id:'marketinglead',name:'Marketing Lead',dept:'Business',emoji:'📣',model:'Claude Sonnet',resp:['Strategy','Audience','Messaging','Campaigns'],handoffs:['Content Creator']},
+  {id:'contentcreator',name:'Content Creator',dept:'Business',emoji:'✍️',model:'Claude Sonnet',resp:['Devlogs','Social posts','Trailers','Press kit'],handoffs:['Steam Manager']},
+  {id:'steammanager',name:'Steam Manager',dept:'Business',emoji:'🚀',model:'Claude Sonnet',resp:['Store page','Tags','Pricing','Launch'],handoffs:['Founder']},
+  {id:'analyticsspecialist',name:'Analytics Specialist',dept:'Data',emoji:'📊',model:'GPT-4o',resp:['Playtest data','Retention','Metrics','Reports'],handoffs:['Producer','Founder']},
 ];
-const DC={Design:{bg:'rgba(124,106,247,0.15)',color:'#a78bfa'},Tech:{bg:'rgba(34,211,160,0.15)',color:'#22d3a0'},Quality:{bg:'rgba(245,158,11,0.15)',color:'#f59e0b'},Business:{bg:'rgba(239,68,68,0.15)',color:'#ef4444'},Data:{bg:'rgba(59,130,246,0.15)',color:'#60a5fa'}};
-let history=JSON.parse(localStorage.getItem('kivo_history')||'[]');
-let currentCmd=null,selectedAgent=null,lastOutput='';
-let agentTasks=JSON.parse(localStorage.getItem('kivo_agent_tasks')||'{}');
 
-function ts(){const d=new Date();return d.getHours()+':'+String(d.getMinutes()).padStart(2,'0');}
+const DC = {
+  Design:  {bg:'rgba(108,92,231,.15)',color:'#a29bfe'},
+  Tech:    {bg:'rgba(0,206,201,.12)',color:'#00cec9'},
+  Quality: {bg:'rgba(253,203,110,.12)',color:'#fdcb6e'},
+  Business:{bg:'rgba(225,112,85,.12)',color:'#e17055'},
+  Data:    {bg:'rgba(9,132,227,.12)',color:'#0984e3'},
+};
 
-function showPage(p,btn){
-  document.querySelectorAll('.page').forEach(el=>el.classList.remove('active'));
-  document.querySelectorAll('.nav-tab').forEach(el=>el.classList.remove('active'));
-  document.getElementById('page-'+p).classList.add('active');
-  if(btn)btn.classList.add('active');
-  if(p==='agents')renderAgentCards();
+const COMMANDS = [
+  {id:'/new-game',label:'New Game',icon:'✦',desc:'Generate game concepts'},
+  {id:'/game-design-doc',label:'Game Design Doc',icon:'📋',desc:'Full GDD generation'},
+  {id:'/build',label:'Build',icon:'⚡',desc:'Generate Unity scripts'},
+  {id:'/playtest',label:'Playtest',icon:'🎮',desc:'QA and analytics'},
+  {id:'/steam-page',label:'Steam Page',icon:'🚀',desc:'Store page content'},
+  {id:'/launch-plan',label:'Launch Plan',icon:'📅',desc:'Full launch strategy'},
+];
+
+// ── STATE ─────────────────────────────────────────────────────────────────
+let history = JSON.parse(localStorage.getItem('kivo_history') || '[]');
+let agentMsgs = JSON.parse(localStorage.getItem('kivo_agent_msgs') || '{}');
+let agentTaskCounts = JSON.parse(localStorage.getItem('kivo_agent_tasks') || '{}');
+let analyticsLog = JSON.parse(localStorage.getItem('kivo_analytics') || '[]');
+let currentSection = 'studio';
+let currentCmd = null;
+let selectedAgent = null;
+let lastOutput = '';
+
+// ── AUTH ──────────────────────────────────────────────────────────────────
+async function doLogin() {
+  const pw = document.getElementById('pw').value;
+  try {
+    const res = await fetch('/auth', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pw})});
+    const d = await res.json();
+    if (d.ok) { localStorage.setItem('kivo_auth','1'); bootApp(); }
+    else { document.getElementById('pw-err').style.display = 'block'; }
+  } catch(e) { document.getElementById('pw-err').style.display = 'block'; }
+}
+document.getElementById('pw').addEventListener('keypress', e => { if(e.key==='Enter') doLogin(); });
+
+function bootApp() {
+  document.getElementById('login').style.display = 'none';
+  document.getElementById('app').style.display = 'flex';
+  renderSidebar();
+  renderAgentGrid();
+  updateAnalytics();
+  if (history.length > 0) renderOutput(history[0].results);
 }
 
-function renderAgentCards(){
-  const c=document.getElementById('agent-cards');
-  c.innerHTML='';
-  AGENTS.forEach(a=>{
-    const col=DC[a.dept];
-    const el=document.createElement('div');
-    el.className='tool-card';
-    el.innerHTML=`<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;"><div style="width:36px;height:36px;border-radius:9px;background:${col.bg};color:${col.color};display:flex;align-items:center;justify-content:center;font-size:18px;">${a.emoji}</div><div><div style="font-size:13px;font-weight:600;">${a.name}</div><div style="font-size:11px;color:var(--muted);">${a.dept}</div></div><div style="margin-left:auto;width:7px;height:7px;border-radius:50%;background:var(--green);"></div></div><div style="display:flex;flex-wrap:wrap;gap:4px;">${a.resp.slice(0,2).map(r=>`<span style="font-size:10px;padding:2px 7px;border-radius:4px;background:${col.bg};color:${col.color};">${r}</span>`).join('')}</div>`;
-    el.onclick=()=>openAgentDetail(a);
-    c.appendChild(el);
+if (localStorage.getItem('kivo_auth') === '1') bootApp();
+
+// ── SIDEBAR ───────────────────────────────────────────────────────────────
+function renderSidebar() {
+  const s = document.getElementById('sidebar');
+  if (currentSection === 'studio') {
+    s.innerHTML = `
+      <div class="sidebar-header">Workflows</div>
+      ${COMMANDS.map(c => `
+        <div class="sidebar-item ${currentCmd===c.id?'active':''}" onclick="runCmd('${c.id}')">
+          <span class="si-icon">${c.icon}</span> ${c.label}
+        </div>
+      `).join('')}
+      <div class="sidebar-sep"></div>
+      <div class="sidebar-header">History</div>
+      ${history.slice(0,8).map((h,i) => `
+        <div class="sidebar-item ${i===0?'active':''}" onclick="loadHistory(${i})">
+          <span class="si-icon">🕐</span>
+          <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${h.cmd}</span>
+          <span style="font-size:10px;color:var(--text3)">${h.time}</span>
+        </div>
+      `).join('')}
+    `;
+  } else if (currentSection === 'agents') {
+    const depts = [...new Set(AGENTS.map(a=>a.dept))];
+    s.innerHTML = depts.map(dept => `
+      <div class="sidebar-header">${dept}</div>
+      ${AGENTS.filter(a=>a.dept===dept).map(a => `
+        <div class="sidebar-item" onclick="openAgent('${a.id}')">
+          <span class="si-icon">${a.emoji}</span> ${a.name}
+        </div>
+      `).join('')}
+    `).join('<div class="sidebar-sep"></div>');
+  } else if (currentSection === 'analytics') {
+    s.innerHTML = `
+      <div class="sidebar-header">Analytics</div>
+      <div class="sidebar-item active"><span class="si-icon">💰</span> Cost & Spend</div>
+      <div class="sidebar-item"><span class="si-icon">📈</span> Token Usage</div>
+      <div class="sidebar-item"><span class="si-icon">⚡</span> Performance</div>
+      <div class="sidebar-item"><span class="si-icon">🔔</span> Alerts</div>
+    `;
+  } else {
+    s.innerHTML = `
+      <div class="sidebar-header">Settings</div>
+      <div class="sidebar-item active"><span class="si-icon">🔑</span> API Keys</div>
+      <div class="sidebar-item"><span class="si-icon">🤖</span> Models</div>
+      <div class="sidebar-item"><span class="si-icon">🔔</span> Notifications</div>
+    `;
+  }
+}
+
+// ── SECTION SWITCH ────────────────────────────────────────────────────────
+function switchSection(s) {
+  currentSection = s;
+  ['studio','agents','analytics','settings'].forEach(sec => {
+    document.getElementById('section-'+sec).style.display = sec===s ? 'flex' : 'none';
   });
+  ['studio','agents','analytics','settings'].forEach(sec => {
+    const el = document.getElementById('ni-'+sec);
+    if (el) el.classList.toggle('active', sec===s);
+  });
+  document.getElementById('topbar-title').textContent = s.charAt(0).toUpperCase()+s.slice(1);
+  renderSidebar();
+  if (s==='analytics') updateAnalytics();
 }
 
-function renderAgentMessages(a){
-  const msgs=document.getElementById('detail-messages');
-  const agentHistory=JSON.parse(localStorage.getItem('kivo_agent_msgs')||'{}');
-  const list=agentHistory[a.id]||[];
-  if(list.length===0){msgs.innerHTML=`<div class="chat-empty">${a.emoji}<br><br>No output yet.</div>`;return;}
-  msgs.innerHTML='';
-  list.forEach(h=>{
-    const el=document.createElement('div');
-    el.className='msg';
-    el.innerHTML=`<div class="msg-task">→ ${h.task}</div><div class="msg-header">${a.emoji} ${a.name} · ${h.time}</div>${h.output}`;
+// ── AGENT GRID ────────────────────────────────────────────────────────────
+function renderAgentGrid() {
+  const g = document.getElementById('agent-grid');
+  g.innerHTML = AGENTS.map(a => {
+    const col = DC[a.dept];
+    return `
+      <div class="agent-card" onclick="openAgent('${a.id}')">
+        <div class="agent-card-header">
+          <div class="agent-emoji" style="background:${col.bg};color:${col.color}">${a.emoji}</div>
+          <div>
+            <div class="agent-card-name">${a.name}</div>
+            <div class="agent-card-dept">${a.dept} · ${a.model}</div>
+          </div>
+          <div class="agent-online"></div>
+        </div>
+        <div class="agent-tags">
+          ${a.resp.slice(0,2).map(r=>`<span class="agent-tag" style="background:${col.bg};color:${col.color}">${r}</span>`).join('')}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function openAgent(id) {
+  const a = AGENTS.find(x=>x.id===id);
+  if (!a) return;
+  selectedAgent = a;
+  const col = DC[a.dept];
+  document.getElementById('agent-list-view').style.display = 'none';
+  const det = document.getElementById('agent-detail');
+  det.classList.add('visible');
+  const av = document.getElementById('adh-avatar');
+  av.style.cssText = `width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:22px;background:${col.bg};color:${col.color};`;
+  av.textContent = a.emoji;
+  document.getElementById('adh-name').textContent = a.name;
+  document.getElementById('adh-meta').textContent = a.dept + ' · ' + a.model;
+  document.getElementById('ai-dept').textContent = a.dept;
+  document.getElementById('ai-model').textContent = a.model;
+  document.getElementById('ai-tasks').textContent = agentTaskCounts[a.id] || 0;
+  document.getElementById('ai-resp').innerHTML = a.resp.map(r=>`<span class="tag" style="background:${col.bg};color:${col.color}">${r}</span>`).join('');
+  document.getElementById('ai-handoffs').innerHTML = a.handoffs.map(h=>`<span class="tag" style="background:var(--surface2);color:var(--text2);border:1px solid var(--border2)">${h}</span>`).join('');
+  renderAgentMessages(a);
+  switchSection('agents');
+}
+
+function closeAgentDetail() {
+  document.getElementById('agent-list-view').style.display = 'block';
+  document.getElementById('agent-detail').classList.remove('visible');
+  selectedAgent = null;
+}
+
+function renderAgentMessages(a) {
+  const msgs = document.getElementById('agent-messages');
+  const list = agentMsgs[a.id] || [];
+  if (list.length === 0) { msgs.innerHTML = `<div class="chat-empty">${a.emoji}<br><br>No output yet.</div>`; return; }
+  msgs.innerHTML = '';
+  list.forEach(h => {
+    const el = document.createElement('div');
+    el.className = 'msg';
+    el.innerHTML = `<div class="msg-task">→ ${h.task}</div><div class="msg-meta">${a.emoji} ${a.name} · ${h.time}</div><div class="msg-body">${h.output}</div>`;
     msgs.appendChild(el);
   });
-  msgs.scrollTop=msgs.scrollHeight;
+  msgs.scrollTop = msgs.scrollHeight;
 }
 
-function openAgentDetail(a){
-  selectedAgent=a;
-  const col=DC[a.dept];
-  document.getElementById('agent-list-view').style.display='none';
-  const dv=document.getElementById('agent-detail-view');
-  dv.style.display='flex';
-  const av=document.getElementById('detail-avatar');
-  av.style.cssText=`width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:22px;background:${col.bg};color:${col.color};`;
-  av.textContent=a.emoji;
-  document.getElementById('detail-name').textContent=a.name;
-  document.getElementById('detail-role').textContent=a.dept+' Department';
-  document.getElementById('detail-dept').textContent=a.dept;
-  document.getElementById('detail-tasks').textContent=agentTasks[a.id]||0;
-  document.getElementById('detail-resp').innerHTML=a.resp.map(r=>`<span class="tag">${r}</span>`).join('');
-  renderAgentMessages(a);
-}
-
-function closeAgentDetail(){
-  document.getElementById('agent-list-view').style.display='block';
-  document.getElementById('agent-detail-view').style.display='none';
-  selectedAgent=null;
-}
-
-async function runAgentTask(){
-  if(!selectedAgent)return;
-  const task=document.getElementById('detail-task-input').value.trim();
-  if(!task)return;
-  const msgs=document.getElementById('detail-messages');
-  msgs.innerHTML=`<div class="loading-state"><div class="spinner"></div>${selectedAgent.name} working...</div>`;
-  try{
-    const res=await fetch('/agent-task',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({agentId:selectedAgent.id,task})});
-    const data=await res.json();
-    const output=data.output||'No output';
-    agentTasks[selectedAgent.id]=(agentTasks[selectedAgent.id]||0)+1;
-    localStorage.setItem('kivo_agent_tasks',JSON.stringify(agentTasks));
-    document.getElementById('detail-tasks').textContent=agentTasks[selectedAgent.id];
-    const agentHistory=JSON.parse(localStorage.getItem('kivo_agent_msgs')||'{}');
-    if(!agentHistory[selectedAgent.id])agentHistory[selectedAgent.id]=[];
-    agentHistory[selectedAgent.id].push({task,output,time:ts()});
-    localStorage.setItem('kivo_agent_msgs',JSON.stringify(agentHistory));
+async function runAgentTask() {
+  if (!selectedAgent) return;
+  const task = document.getElementById('agent-task-input').value.trim();
+  if (!task) return;
+  const msgs = document.getElementById('agent-messages');
+  msgs.innerHTML = `<div class="loading-state"><div class="spinner"></div>${selectedAgent.name} working...</div>`;
+  try {
+    const res = await fetch('/agent-task', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({agentId:selectedAgent.id,task})});
+    const data = await res.json();
+    const output = data.output || 'No output';
+    agentTaskCounts[selectedAgent.id] = (agentTaskCounts[selectedAgent.id]||0)+1;
+    localStorage.setItem('kivo_agent_tasks', JSON.stringify(agentTaskCounts));
+    document.getElementById('ai-tasks').textContent = agentTaskCounts[selectedAgent.id];
+    if (!agentMsgs[selectedAgent.id]) agentMsgs[selectedAgent.id] = [];
+    agentMsgs[selectedAgent.id].push({task, output, time: ts()});
+    localStorage.setItem('kivo_agent_msgs', JSON.stringify(agentMsgs));
+    logAnalytics('agent-task', selectedAgent.id, output.length);
     renderAgentMessages(selectedAgent);
-    document.getElementById('detail-task-input').value='';
-  }catch(e){msgs.innerHTML=`<div class="msg">Connection error.</div>`;}
+    document.getElementById('agent-task-input').value = '';
+  } catch(e) { msgs.innerHTML = `<div class="msg"><div class="msg-body">Connection error.</div></div>`; }
 }
 
-function saveHistory(cmd,results){
-  history.unshift({cmd,results,time:ts(),id:Date.now()});
-  if(history.length>30)history=history.slice(0,30);
-  localStorage.setItem('kivo_history',JSON.stringify(history));
-  renderHistory();
+// ── STUDIO / RUN CMD ─────────────────────────────────────────────────────
+async function runCmd(command, context) {
+  currentCmd = command;
+  switchSection('studio');
+  renderSidebar();
+  const output = document.getElementById('studio-output');
+  output.innerHTML = `<div class="loading-state"><div class="spinner"></div>Running ${command} — agents initializing...</div>`;
+  try {
+    const ctx = context || document.getElementById('ctx-input').value || 'Throne Runners: Together — 2-4 player co-op medieval game, throne carrying mechanic, physics-based, skeleton and knight enemies, low poly cartoon style, Steam PC';
+    const res = await fetch('/command', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({command,context:ctx})});
+    const data = await res.json();
+    if (data.error) { output.innerHTML = `<div class="output-card"><div class="output-card-body">Error: ${data.error}</div></div>`; return; }
+    history.unshift({cmd:command,results:data.results,time:ts(),id:Date.now()});
+    if (history.length>30) history=history.slice(0,30);
+    localStorage.setItem('kivo_history', JSON.stringify(history));
+    logAnalytics('command', command, data.results?.reduce((a,r)=>a+r.output.length,0)||0);
+    renderSidebar();
+    renderOutput(data.results);
+    lastOutput = data.results.map(r=>`## ${r.agent}\n\n${r.output}`).join('\n\n---\n\n');
+  } catch(e) { output.innerHTML = `<div class="output-card"><div class="output-card-body">Connection error.</div></div>`; }
 }
 
-function renderHistory(){
-  const list=document.getElementById('history-list');
-  list.innerHTML='';
-  history.slice(0,10).forEach((h,i)=>{
-    const el=document.createElement('div');
-    el.className='hist-item'+(i===0?' selected':'');
-    el.innerHTML=`<span class="hist-cmd">${h.cmd}</span><span class="hist-time">${h.time}</span>`;
-    el.onclick=()=>{
-      document.querySelectorAll('.hist-item').forEach(x=>x.classList.remove('selected'));
-      el.classList.add('selected');
-      renderOutput(h.results);
-      document.querySelectorAll('.nav-tab')[0].click();
-    };
-    list.appendChild(el);
-  });
+function runFromCtx() { runCmd(currentCmd||'/new-game'); }
+document.getElementById('ctx-input').addEventListener('keypress', e => { if(e.key==='Enter') runFromCtx(); });
+
+function loadHistory(i) {
+  const h = history[i];
+  if (h) { switchSection('studio'); renderOutput(h.results); }
 }
 
-function renderOutput(results){
-  const output=document.getElementById('output');
-  output.innerHTML='';
-  lastOutput=results.map(r=>`## ${r.agent}\n\n${r.output}`).join('\n\n---\n\n');
-  results.forEach(r=>{
-    const a=AGENTS.find(x=>x.id===r.agent)||{emoji:'🤖',name:r.agent,dept:'Design'};
-    const col=DC[a.dept]||{bg:'rgba(124,106,247,0.15)',color:'#a78bfa'};
-    const card=document.createElement('div');
-    card.className='agent-card';
-    card.innerHTML=`<div class="card-header" onclick="toggleCard(this)"><div class="card-avatar" style="background:${col.bg};color:${col.color};">${a.emoji}</div><span class="card-title">${a.name}</span><span class="card-badge">✓ done</span><span class="card-toggle">▼</span></div><div class="card-body">${r.output}</div>`;
+function renderOutput(results) {
+  const output = document.getElementById('studio-output');
+  output.innerHTML = '';
+  results.forEach(r => {
+    const a = AGENTS.find(x=>x.id===r.agent) || {emoji:'🤖',name:r.agent,dept:'Design'};
+    const col = DC[a.dept] || {bg:'rgba(108,92,231,.15)',color:'#a29bfe'};
+    const card = document.createElement('div');
+    card.className = 'output-card';
+    card.innerHTML = `
+      <div class="output-card-header" onclick="toggleOutputCard(this)">
+        <div class="output-card-avatar" style="background:${col.bg};color:${col.color}">${a.emoji}</div>
+        <span class="output-card-name">${a.name}</span>
+        <span class="output-card-badge">✓ done</span>
+        <span class="output-card-toggle">▼</span>
+      </div>
+      <div class="output-card-body">${r.output}</div>
+    `;
     output.appendChild(card);
   });
 }
 
-function toggleCard(header){
-  const body=header.nextElementSibling;
-  const icon=header.querySelector('.card-toggle');
+function toggleOutputCard(header) {
+  const body = header.nextElementSibling;
+  const icon = header.querySelector('.output-card-toggle');
   body.classList.toggle('collapsed');
-  icon.textContent=body.classList.contains('collapsed')?'▶':'▼';
+  icon.textContent = body.classList.contains('collapsed') ? '▶' : '▼';
 }
 
-async function run(command,btn){
-  currentCmd=command;
-  document.querySelectorAll('.cmd-btn').forEach(b=>b.classList.remove('active'));
-  if(btn&&btn.classList)btn.classList.add('active');
-  const output=document.getElementById('output');
-  output.innerHTML=`<div class="loading-state"><div class="spinner"></div>Running ${command} — agents initializing...</div>`;
-  try{
-    const ctx=document.getElementById('ctx')?.value||'';
-    const res=await fetch('/command',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({command,context:ctx||'Throne Runners: Together — 2-4 player co-op medieval game, throne carrying mechanic, physics-based, skeleton and knight enemies, low poly cartoon style, Steam PC'})});
-    const data=await res.json();
-    if(data.error){output.innerHTML=`<div class="agent-card"><div class="card-body">Error: ${data.error}</div></div>`;return;}
-    saveHistory(command,data.results);
-    renderOutput(data.results);
-  }catch(e){output.innerHTML=`<div class="agent-card"><div class="card-body">Connection error.</div></div>`;}
+// ── ANALYTICS ────────────────────────────────────────────────────────────
+function logAnalytics(type, id, size) {
+  analyticsLog.push({type,id,size,time:Date.now()});
+  if (analyticsLog.length > 200) analyticsLog = analyticsLog.slice(-200);
+  localStorage.setItem('kivo_analytics', JSON.stringify(analyticsLog));
 }
 
-function runCtx(){run(currentCmd||'/new-game');}
-document.getElementById('ctx').addEventListener('keypress',e=>{if(e.key==='Enter')runCtx();});
-function downloadOutput(){if(!lastOutput){alert('No output yet.');return;}const b=new Blob([lastOutput],{type:'text/markdown'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`kivo-studio-${Date.now()}.md`;a.click();}
-function copyLastOutput(){if(!lastOutput){alert('No output yet.');return;}navigator.clipboard.writeText(lastOutput).then(()=>alert('Copied!'));}
-function clearHistory(){if(!confirm('Clear all history?'))return;history=[];localStorage.removeItem('kivo_history');renderHistory();alert('Cleared.');}
-function showStats(){alert(`Studio Stats\n\nCommands run: ${history.length}\nAgents available: 15`);}
-async function runAll(){if(!confirm('Run full pipeline?'))return;await run('/game-design-doc');await run('/build');await run('/playtest');}
-renderHistory();
-if(history.length>0)renderOutput(history[0].results);
+function updateAnalytics() {
+  const cmds = analyticsLog.filter(l=>l.type==='command');
+  const tasks = analyticsLog.filter(l=>l.type==='agent-task');
+  const totalSize = analyticsLog.reduce((a,l)=>a+l.size,0);
+  const estTokens = Math.round(totalSize/4);
+  const estCost = (estTokens * 0.000003).toFixed(4);
+  document.getElementById('an-spend').textContent = estCost;
+  document.getElementById('an-tokens').textContent = estTokens.toLocaleString();
+  document.getElementById('an-cmds').textContent = history.length;
+  const usedAgents = [...new Set(analyticsLog.map(l=>l.id))].length;
+  document.getElementById('an-agents').textContent = usedAgents;
+
+  // by agent
+  const byAgent = {};
+  tasks.forEach(t => { byAgent[t.id] = (byAgent[t.id]||0)+t.size; });
+  const byAgentEl = document.getElementById('an-by-agent');
+  const maxA = Math.max(...Object.values(byAgent),1);
+  byAgentEl.innerHTML = Object.entries(byAgent).slice(0,6).map(([id,size])=>`
+    <div class="bar-row">
+      <span class="bar-label">${id.replace('developer','dev').replace('director','dir')}</span>
+      <div class="bar-track"><div class="bar-fill" style="width:${(size/maxA*100).toFixed(0)}%"></div></div>
+      <span class="bar-val">${Math.round(size/4)} tk</span>
+    </div>
+  `).join('') || '<div style="font-size:12px;color:var(--text3)">No data yet</div>';
+
+  // by cmd
+  const byCmd = {};
+  cmds.forEach(c => { byCmd[c.id] = (byCmd[c.id]||0)+1; });
+  const byCmdEl = document.getElementById('an-by-cmd');
+  const maxC = Math.max(...Object.values(byCmd),1);
+  byCmdEl.innerHTML = Object.entries(byCmd).map(([id,n])=>`
+    <div class="bar-row">
+      <span class="bar-label">${id}</span>
+      <div class="bar-track"><div class="bar-fill" style="width:${(n/maxC*100).toFixed(0)}%"></div></div>
+      <span class="bar-val">${n}x</span>
+    </div>
+  `).join('') || '<div style="font-size:12px;color:var(--text3)">No data yet</div>';
+
+  // log
+  const logEl = document.getElementById('an-log');
+  logEl.innerHTML = analyticsLog.slice(-20).reverse().map(l=>`
+    <div>[${new Date(l.time).toLocaleTimeString()}] ${l.type} — ${l.id} — ~${Math.round(l.size/4)} tokens</div>
+  `).join('') || 'No activity logged yet.';
+}
+
+// ── COMMAND PALETTE ───────────────────────────────────────────────────────
+const allCmds = [
+  ...COMMANDS.map(c=>({icon:c.icon,name:c.label,desc:c.desc,action:()=>runCmd(c.id)})),
+  ...AGENTS.map(a=>({icon:a.emoji,name:a.name,desc:a.dept+' · '+a.model,action:()=>openAgent(a.id)})),
+  {icon:'📊',name:'Analytics',desc:'View usage and cost',action:()=>switchSection('analytics')},
+  {icon:'⚙️',name:'Settings',desc:'Studio settings',action:()=>switchSection('settings')},
+];
+
+function openCmd() {
+  document.getElementById('cmd-palette').classList.add('open');
+  document.getElementById('cmd-input').value='';
+  filterCmds('');
+  document.getElementById('cmd-input').focus();
+}
+
+function closeCmd() { document.getElementById('cmd-palette').classList.remove('open'); }
+
+document.getElementById('cmd-palette').addEventListener('click', e => { if(e.target===document.getElementById('cmd-palette')) closeCmd(); });
+
+document.addEventListener('keydown', e => {
+  if ((e.metaKey||e.ctrlKey) && e.key==='k') { e.preventDefault(); openCmd(); }
+  if (e.key==='Escape') closeCmd();
+});
+
+function filterCmds(q) {
+  const filtered = allCmds.filter(c=>c.name.toLowerCase().includes(q.toLowerCase())||c.desc.toLowerCase().includes(q.toLowerCase()));
+  document.getElementById('cmd-results').innerHTML = filtered.slice(0,8).map((c,i)=>`
+    <div class="cmd-item" onclick="c${i}()" id="cmi-${i}">
+      <span class="cmd-item-icon">${c.icon}</span>
+      <span class="cmd-item-name">${c.name}<span style="font-size:11px;color:var(--text3);margin-left:8px">${c.desc}</span></span>
+    </div>
+  `).join('');
+  filtered.slice(0,8).forEach((c,i) => {
+    const el = document.getElementById('cmi-'+i);
+    if (el) el.onclick = () => { c.action(); closeCmd(); };
+  });
+}
+
+// ── UTILS ─────────────────────────────────────────────────────────────────
+function ts() { const d=new Date(); return d.getHours()+':'+String(d.getMinutes()).padStart(2,'0'); }
+
+// boot if already authed
+if (localStorage.getItem('kivo_auth') === '1') {
+  document.getElementById('login').style.display = 'none';
+  document.getElementById('app').style.display = 'flex';
+  renderSidebar();
+  renderAgentGrid();
+  updateAnalytics();
+  if (history.length > 0) renderOutput(history[0].results);
+}
 </script>
 </body>
 </html>
