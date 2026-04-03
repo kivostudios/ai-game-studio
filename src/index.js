@@ -11,14 +11,15 @@ fastify.register(require('@fastify/static'), {
 fastify.register(require('@fastify/websocket'));
 
 const wsClients = new Set();
+let sharedState = null;
 
 fastify.get('/ws', { websocket: true }, (socket) => {
   wsClients.add(socket);
+  if (sharedState) socket.send(JSON.stringify({ type: 'sync', state: sharedState }));
   socket.on('message', (raw) => {
+    try { const m = JSON.parse(raw.toString()); if (m.type === 'sync') sharedState = m.state; } catch(_) {}
     for (const c of wsClients) {
-      if (c !== socket && c.readyState === 1) {
-        c.send(raw.toString());
-      }
+      if (c !== socket && c.readyState === 1) c.send(raw.toString());
     }
   });
   socket.on('close', () => wsClients.delete(socket));
