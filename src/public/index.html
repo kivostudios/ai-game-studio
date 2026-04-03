@@ -437,6 +437,14 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;heigh
             <span class="settings-label">Default AI Context</span>
             <textarea class="settings-input" id="set-context" rows="3" style="height:auto;resize:vertical;">Throne Runners: Together — 2-4 player co-op medieval game, throne carrying mechanic, physics-based, skeleton and knight enemies, low poly cartoon style, Steam PC</textarea>
           </div>
+          <div class="settings-row" style="align-items:flex-start;">
+  <span class="settings-label" style="padding-top:8px;">Upload GDD File</span>
+  <div style="flex:1;">
+    <input type="file" id="gdd-file" accept=".txt,.md,.pdf" style="display:none;" onchange="readGDDFile(this)">
+    <button class="tba-btn" onclick="document.getElementById('gdd-file').click()">📁 Upload File (.txt, .md)</button>
+    <span id="gdd-filename" style="font-size:11px;color:var(--text3);margin-left:8px;"></span>
+  </div>
+</div>
           <div class="settings-section">
   <div class="settings-title">Game Design Document</div>
   <div class="settings-row" style="align-items:flex-start;">
@@ -1076,6 +1084,16 @@ function filterCmds(q){
   });
 }
 
+function readGDDFile(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    document.getElementById('set-gdd').value = e.target.result;
+    document.getElementById('gdd-filename').textContent = file.name + ' ✓';
+  };
+  reader.readAsText(file);
+}
 // ── UTILS ─────────────────────────────────────────────────────────────────
 function ts(){const d=new Date();return d.getHours()+':'+String(d.getMinutes()).padStart(2,'0');}
 </script>
