@@ -538,6 +538,36 @@ let selectedAgent = null;
 let lastOutput = '';
 let studioAiMsgs = [];
 
+// ── REALTIME SYNC ─────────────────────────────────────────────────────────
+let ws, _applying = false;
+function connectWS() {
+  const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
+  ws = new WebSocket(proto + '//' + location.host + '/ws');
+  ws.onmessage = (e) => {
+    try { const m = JSON.parse(e.data); if (m.type === 'sync') applySync(m.state); } catch(_){}
+  };
+  ws.onclose = () => setTimeout(connectWS, 2000);
+}
+function syncState() {
+  if (!ws || ws.readyState !== 1 || _applying) return;
+  ws.send(JSON.stringify({ type:'sync', state:{ cmdHistory, agentMsgs, agentTaskCounts, analyticsLog, settings, phases } }));
+}
+function applySync(s) {
+  _applying = true;
+  if (s.cmdHistory) { cmdHistory = s.cmdHistory; localStorage.setItem('kivo_history', JSON.stringify(cmdHistory)); }
+  if (s.agentMsgs) { agentMsgs = s.agentMsgs; localStorage.setItem('kivo_agent_msgs', JSON.stringify(agentMsgs)); }
+  if (s.agentTaskCounts) { agentTaskCounts = s.agentTaskCounts; localStorage.setItem('kivo_agent_tasks', JSON.stringify(agentTaskCounts)); }
+  if (s.analyticsLog) { analyticsLog = s.analyticsLog; localStorage.setItem('kivo_analytics', JSON.stringify(analyticsLog)); }
+  if (s.settings) { settings = s.settings; localStorage.setItem('kivo_settings', JSON.stringify(settings)); }
+  if (s.phases) { phases = s.phases; localStorage.setItem('kivo_phases', JSON.stringify(phases)); }
+  applySettings();
+  renderSidebar();
+  updateDashboard();
+  if (currentSection === 'analytics') updateAnalytics();
+  if (selectedAgent) renderAgentMsgs(selectedAgent);
+  _applying = false;
+}
+
 // ── DEFAULT SETTINGS ──────────────────────────────────────────────────────
 const DEF = {
   name: 'Throne Runners: Together',
@@ -566,6 +596,7 @@ document.getElementById('pw').addEventListener('keypress',e=>{if(e.key==='Enter'
 function boot() {
   document.getElementById('login').style.display='none';
   document.getElementById('app').style.display='flex';
+  connectWS();
   applySettings();
   renderSidebar();
   renderAgentGrid();
@@ -622,6 +653,7 @@ function saveSettings() {
   localStorage.setItem('kivo_phases',JSON.stringify(phases));
   applySettings();
   updateDashboard();
+  syncState();
   const fb = document.getElementById('save-feedback');
   fb.style.display='inline';
   setTimeout(()=>fb.style.display='none',2000);
@@ -847,6 +879,7 @@ function savePhaseModal() {
     if(el){el.value=phases[i];document.getElementById('phase-pct-val-'+i).textContent=phases[i]+'%';}
   });
   updateDashboard();
+  syncState();
   closePhaseModal();
 }
 
@@ -878,6 +911,7 @@ async function runCmd(command,context) {
     renderOutput(data.results);
     lastOutput=data.results.map(function(r){return '## '+r.agent+'\n\n'+r.output;}).join('\n\n---\n\n');
     updateDashboard();
+    syncState();
   } catch(e){output.innerHTML='<div class="output-card"><div class="oc-body">Connection error.</div></div>';}
 }
 
@@ -995,6 +1029,7 @@ async function runAgentTask(){
     renderAgentMsgs(selectedAgent);
     document.getElementById('agent-task-input').value='';
     updateDashboard();
+    syncState();
   }catch(e){msgs.innerHTML='<div class="msg"><div class="msg-body">Connection error.</div></div>';}
 }
 

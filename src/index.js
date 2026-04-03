@@ -8,6 +8,22 @@ fastify.register(require('@fastify/static'), {
   prefix: '/'
 });
 
+fastify.register(require('@fastify/websocket'));
+
+const wsClients = new Set();
+
+fastify.get('/ws', { websocket: true }, (socket) => {
+  wsClients.add(socket);
+  socket.on('message', (raw) => {
+    for (const c of wsClients) {
+      if (c !== socket && c.readyState === 1) {
+        c.send(raw.toString());
+      }
+    }
+  });
+  socket.on('close', () => wsClients.delete(socket));
+});
+
 fastify.post('/auth', async (request, reply) => {
   const { password } = request.body;
   const correct = process.env.STUDIO_PASSWORD || 'kivo2024';
